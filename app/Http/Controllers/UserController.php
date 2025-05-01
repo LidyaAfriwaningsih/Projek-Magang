@@ -44,6 +44,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'user'
         ]);
 
         // Login otomatis setelah registrasi berhasil
@@ -78,13 +79,17 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'nullable|string|max:15',
             'password' => 'required|string|min:6',
+            'role' => 'required|in:admin,user',
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'role' => $request->role,
         ]);
 
         return redirect()->back()->with('success', 'User berhasil ditambahkan.');
@@ -100,5 +105,31 @@ class UserController extends Controller
     {
         $user->delete();
         return back()->with('success', 'User berhasil dihapus.');
+    }
+
+    /**
+     * Memperbarui pengguna.
+     *
+     * @param Request $request
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, User $user)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:15',
+            'password' => 'nullable|string|min:6|confirmed',
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => $request->password ? Hash::make($request->password) : $user->password,
+        ]);
+
+        return redirect()->back()->with('success', 'User berhasil diperbarui.');
     }
 }

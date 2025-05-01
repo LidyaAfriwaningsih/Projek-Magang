@@ -39,6 +39,7 @@ return [
         'name' => 'Nama',
         'email' => 'Surel',
         'password' => 'Kata Sandi',
+        'password_confirmation' => 'konfirmasi kata sandi',
         'phone' => 'Nomor Telepon',
         'role' => 'Peran',
         'is_active' => 'Masih Aktif?',
