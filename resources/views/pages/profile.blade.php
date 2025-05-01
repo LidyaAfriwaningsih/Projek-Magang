@@ -1,4 +1,4 @@
-@extends('layout.main')
+@extends('layouts.main')
 
 @push('script')
     <script>
@@ -97,7 +97,7 @@
                 </form>
             </div>
 
-            @if(auth()->user()->role == 'staff')
+            @if(auth()->user()->role == 'user')
             <div class="card">
                 <h5 class="card-header">{{ __('navbar.profile.deactivate_account') }}</h5>
                 <div class="card-body">

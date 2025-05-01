@@ -2,86 +2,103 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\Config as ConfigEnum;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
-use App\Models\Config;
 use App\Models\User;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use TheSeer\Tokenizer\Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan halaman registrasi.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function register()
+    {
+        return view('pages.register');
+    }
+
+    /**
+     * Memproses registrasi pengguna baru.
      *
      * @param Request $request
-     * @return View
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function index(Request $request): View
+    public function storeRegister(Request $request)
+    {
+        // Validasi data input dari formulir registrasi
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Membuat user baru
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        // Login otomatis setelah registrasi berhasil
+        Auth::login($user);
+
+        // Redirect ke halaman dashboard user
+        return redirect()->route('dashboard')->with('success', 'Registrasi berhasil! Anda telah masuk.');
+    }
+
+    /**
+     * Menampilkan daftar pengguna.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index(Request $request)
     {
         return view('pages.user', [
-            'data' => User::render($request->search),
+            'data' => User::where('name', 'like', '%' . $request->search . '%')->paginate(10),
             'search' => $request->search,
         ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menambahkan user baru (untuk admin).
      *
-     * @param StoreUserRequest $request
-     * @return RedirectResponse
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(StoreUserRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        try {
-            $newUser = $request->validated();
-            $newUser['password'] = Hash::make(Config::getValueByCode(ConfigEnum::DEFAULT_PASSWORD));
-            User::create($newUser);
-            return back()->with('success', __('menu.general.success'));
-        } catch (\Throwable $exception) {
-            return back()->with('error', $exception->getMessage());
-        }
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->back()->with('success', 'User berhasil ditambahkan.');
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param UpdateUserRequest $request
-     * @param User $user
-     * @return RedirectResponse
-     */
-    public function update(UpdateUserRequest $request, User $user): RedirectResponse
-    {
-        try {
-            $newUser = $request->validated();
-            $newUser['is_active'] = isset($newUser['is_active']);
-            if ($request->reset_password)
-                $newUser['password'] = Hash::make(Config::getValueByCode(ConfigEnum::DEFAULT_PASSWORD));
-            $user->update($newUser);
-            return back()->with('success', __('menu.general.success'));
-        } catch (\Throwable $exception) {
-            return back()->with('error', $exception->getMessage());
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
+     * Menghapus pengguna.
      *
      * @param User $user
-     * @return RedirectResponse
-     * @throws \Exception
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(User $user): RedirectResponse
+    public function destroy(User $user)
     {
-        try {
-            $user->delete();
-            return back()->with('success', __('menu.general.success'));
-        } catch (\Throwable $exception) {
-            return back()->with('error', $exception->getMessage());
-        }
+        $user->delete();
+        return back()->with('success', 'User berhasil dihapus.');
     }
 }

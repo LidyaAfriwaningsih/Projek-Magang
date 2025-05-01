@@ -1,4 +1,4 @@
-@extends('layout.main')
+@extends('layouts.main')
 
 @push('style')
     <link rel="stylesheet" href="{{asset('sneat/vendor/libs/apex-charts/apex-charts.css')}}" />

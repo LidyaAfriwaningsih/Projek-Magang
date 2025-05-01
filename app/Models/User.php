@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Role;
 use App\Enums\Config as ConfigEnum;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -67,16 +66,36 @@ class User extends Authenticatable
         );
     }
 
+    /**
+     * Scope untuk pengguna yang aktif
+     *
+     * @param $query
+     * @return mixed
+     */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
 
+    /**
+     * Scope untuk pengguna berdasarkan peran (role)
+     *
+     * @param $query
+     * @param Role $role
+     * @return mixed
+     */
     public function scopeRole($query, Role $role)
     {
         return $query->where('role', $role->status());
     }
 
+    /**
+     * Scope untuk pencarian berdasarkan nama, telepon, atau email
+     *
+     * @param $query
+     * @param $search
+     * @return mixed
+     */
     public function scopeSearch($query, $search)
     {
         return $query->when($search, function($query, $find) {
@@ -87,14 +106,31 @@ class User extends Authenticatable
         });
     }
 
+    /**
+     * Scope untuk render dengan pencarian dan pagination
+     *
+     * @param $query
+     * @param $search
+     * @return mixed
+     */
     public function scopeRender($query, $search)
     {
         return $query
             ->search($search)
-            ->role(Role::STAFF)
+            ->role(Role::USER)
             ->paginate(Config::getValueByCode(ConfigEnum::PAGE_SIZE))
             ->appends([
                 'search' => $search,
             ]);
+    }
+
+    /**
+     * Relasi satu ke banyak dengan Pengajuan
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function pengajuan()
+    {
+        return $this->hasMany(Pengajuan::class);
     }
 }

@@ -20,6 +20,7 @@ class Role
      */
     public function handle(Request $request, Closure $next, ...$roles): Response|RedirectResponse
     {
+
         if (!in_array(auth()->user()->role, $roles)){
             abort(ResponseCode::HTTP_FORBIDDEN);
         }

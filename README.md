@@ -8,7 +8,7 @@ Web app untuk mengelola surat masuk, keluar, serta disposisinya.
 ## Features / Fitur
 
 - Autentikasi/login-logout
-- Level hak akses (admin, staff)
+- Level hak akses (admin, user)
 - Menu Beranda
   - Data jumlah surat masuk hari ini
   - Data jumlah surat keluar hari ini
@@ -69,7 +69,7 @@ Web app untuk mengelola surat masuk, keluar, serta disposisinya.
 - Halaman Profil
   - Mengubah nama, email, dan nomor telepon
   - Mengubah foto profil
-  - Menonaktifkan akun **[khusus staff]**
+  - Menonaktifkan akun **[khusus user]**
 - Halaman Pengaturan **[khusus admin]**
   - Mengatur kata sandi bawaan (saat membuat pengguna baru/setel ulang kata sandi)
   - Mengatur jumlah data per halaman

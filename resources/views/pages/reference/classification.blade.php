@@ -1,4 +1,4 @@
-@extends('layout.main')
+@extends('layouts.main')
 
 @push('script')
     <script>

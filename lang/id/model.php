@@ -44,7 +44,7 @@ return [
         'is_active' => 'Masih Aktif?',
         'picture' => 'Foto Profil',
         'admin' => 'Pengelola',
-        'staff' => 'Staf',
+        'user' => 'user',
         'active' => 'Aktif',
         'nonactive' => 'Nonaktif',
         'reset_password' => 'Setel ulang Kata Sandi menjadi bawaan?',

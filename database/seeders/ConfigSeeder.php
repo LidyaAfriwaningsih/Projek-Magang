@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Config;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ConfigSeeder extends Seeder
 {
@@ -15,43 +15,23 @@ class ConfigSeeder extends Seeder
      */
     public function run(): void
     {
-        Config::insert([
-            [
-                'code' => 'default_password',
-                'value' => 'admin',
-            ],
-            [
-                'code' => 'page_size',
-                'value' => '5',
-            ],
-            [
-                'code' => 'app_name',
-                'value' => 'Aplikasi Surat Menyurat',
-            ],
-            [
-                'code' => 'institution_name',
-                'value' => '404nfid',
-            ],
-            [
-                'code' => 'institution_address',
-                'value' => 'Jl. Padat Karya',
-            ],
-            [
-                'code' => 'institution_phone',
-                'value' => '082121212121',
-            ],
-            [
-                'code' => 'institution_email',
-                'value' => 'admin@admin.com',
-            ],
-            [
-                'code' => 'language',
-                'value' => 'id',
-            ],
-            [
-                'code' => 'pic',
-                'value' => 'M. Iqbal Effendi',
-            ],
-        ]);
+        $configs = [
+            ['code' => 'default_password', 'value' => 'admin'],
+            ['code' => 'page_size', 'value' => '5'],
+            ['code' => 'app_name', 'value' => 'Aplikasi Surat Menyurat'],
+            ['code' => 'institution_name', 'value' => 'Bakesbangpol'],
+            ['code' => 'institution_address', 'value' => 'Sungai Bangek'],
+            ['code' => 'institution_phone', 'value' => '082121212121'],
+            ['code' => 'institution_email', 'value' => 'admin@admin.com'],
+            ['code' => 'language', 'value' => 'id'],
+            ['code' => 'pic', 'value' => 'Lidya Afriwaningsih'],
+        ];
+
+        foreach ($configs as $config) {
+            Config::updateOrInsert(
+                ['code' => $config['code']], // Jika kode sudah ada, update nilainya
+                ['value' => $config['value']]
+            );
+        }
     }
 }

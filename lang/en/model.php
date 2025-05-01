@@ -44,7 +44,7 @@ return [
         'is_active' => 'Is Active?',
         'picture' => 'Profile Picture',
         'admin' => 'Administrator',
-        'staff' => 'Staff',
+        'user' => 'user',
         'active' => 'Active',
         'nonactive' => 'Nonactive',
         'reset_password' => 'Reset Password to Default?',

@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -13,7 +13,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        // Definisikan Policies jika perlu, misalnya:
+        // 'App\Models\Pengajuan' => 'App\Policies\PengajuanPolicy',
     ];
 
     /**
@@ -25,6 +26,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        // Gate untuk akses menu pengajuan magang
+        Gate::define('viewPengajuan', function ($user) {
+            // Cek apakah pengguna memiliki peran yang sesuai
+            return in_array($user->role, ['admin', 'user']);
+        });
+
+        // Anda bisa menambahkan gate atau policy lainnya di sini jika perlu
     }
 }
