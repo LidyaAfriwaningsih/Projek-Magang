@@ -11,12 +11,18 @@ class Pengajuan extends Model
 
     // Menambahkan 'user_id' di $fillable
     protected $fillable = [
-        'jenis', 'nama', 'nim', 'program_studi', 'instansi_tujuan', 'judul_penelitian', 'user_id'
+        'jenis',
+        'nama',
+        'nim',
+        'program_studi',
+        'instansi_tujuan',
+        'judul_penelitian',
+        'user_id'
     ];
 
     // Relasi dengan model User
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 }
