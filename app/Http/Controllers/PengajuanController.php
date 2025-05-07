@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Pengajuan;
 use App\Http\Controllers\PengajuanController;
 use Barryvdh\DomPDF\Facade\PDF;
+use Carbon\Carbon;
 
 class PengajuanController extends Controller
 {
@@ -121,9 +122,13 @@ class PengajuanController extends Controller
      {
          // Ambil data pengajuan dengan relasi ke user (misal: mahasiswa yang mengajukan)
          $pengajuan = Pengajuan::with('user')->findOrFail($id);
+         $tanggalCetak = Carbon::now()->locale('id')->isoFormat('D MMMM Y');
          
          // Menggunakan PDF untuk mencetak surat pengajuan magang
-         $pdf = PDF::loadView('admin.pengajuan.magang.cetak', compact('pengajuan'));
+         $pdf = PDF::loadView('admin.pengajuan.magang.cetak', [
+            'pengajuan' => $pengajuan,
+            'tanggalCetak' => $tanggalCetak
+        ]);
          
          // Menyediakan file PDF untuk diunduh dengan nama yang sesuai
          return $pdf->download('Pengajuan-Magang-'.$pengajuan->user->nama.'.pdf');

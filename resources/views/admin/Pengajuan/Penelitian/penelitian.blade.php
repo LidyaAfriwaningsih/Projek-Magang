@@ -48,7 +48,7 @@
             <!-- Input Instansi Tujuan -->
             <div class="col-6 mb-3">
                 <label for="judul_penelitian">Judul Penelitian</label>
-                <input type="text" class="form-control @error('judul_penelitian') is-invalid @enderror" name="instansi_tujuan"
+                <input type="text" class="form-control @error('judul_penelitian') is-invalid @enderror" name="judul_penelitian"
                     id="judul_penelitian" value="{{ old('judul_penelitian') }}" placeholder="Masukkan " required>
                 @error('judul_penelitian')
                     <p class="text-danger">{{ $message }}</p>

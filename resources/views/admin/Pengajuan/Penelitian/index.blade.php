@@ -32,11 +32,13 @@
                             <td>{{ $pengajuan->status ?? 'Belum Diproses' }}</td>
                             <td>
                                 <a href="{{ route('admin.penelitian.show', $pengajuan->id) }}" class="btn btn-primary">Lihat</a>
+
                                 <form action="{{ route('admin.penelitian.proses', $pengajuan->id) }}" method="POST"
                                     style="display:inline;">
                                     @csrf
                                     <button type="submit" class="btn btn-success">Proses</button>
                                 </form>
+                                
                                 <!-- Link untuk cetak pengajuan magang -->
                                 <a href="{{ route('admin.pengajuan.penelitian.cetak', $pengajuan->id) }}" class="btn btn-secondary btn-sm" target="_blank">
                                     Cetak
