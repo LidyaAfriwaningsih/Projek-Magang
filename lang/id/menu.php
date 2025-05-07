@@ -8,14 +8,13 @@ return [
         'menu' => 'Transaksi Surat',
         'incoming_letter' => 'Surat Masuk',
         'outgoing_letter' => 'Surat Keluar',
-        'disposition_letter' => 'Surat Disposisi',
+
     ],
 
     'agenda' => [
         'menu' => 'Buku Agenda',
         'incoming_letter' => 'Surat Masuk',
         'outgoing_letter' => 'Surat Keluar',
-        'disposition_letter' => 'Surat Disposisi',
         'filter_by' => 'Saring berdasarkan',
         'start_date' => 'Dari Tanggal',
         'end_date' => 'Sampai Tanggal',

@@ -35,8 +35,25 @@
                     </div>
                 @endif
 
+                
+                <!-- Notifikasi Sukses -->
+                @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
+
+                <!-- Notifikasi Error -->
+                @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
+
                 <!-- Form Registrasi -->
-                <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('register.store') }}">
                     @csrf
 
                     <!-- Name -->
@@ -47,7 +64,7 @@
                                 value="{{ old('name') }}" required>
                             <label for="name">Nama Lengkap</label>
                             @error('name')
-                                <p class="text-danger">{{ $message }}</p>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -60,20 +77,20 @@
                                 value="{{ old('email') }}" required>
                             <label for="email">Email</label>
                             @error('email')
-                                <p class="text-danger">{{ $message }}</p>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
                     
-                    <!-- Nomor Telepon -->
+                    <!-- Nomor Telepon (Opsional, bisa dihapus kalau tidak digunakan di controller) -->
                     <div class="col-12">
                         <div class="form-floating mb-2">
                             <input type="text" class="form-control @error('phone') is-invalid @enderror"
                                 id="phone" name="phone" placeholder="Nomor Telepon"
-                                value="{{ old('phone') }}" required>
+                                value="{{ old('phone') }}">
                             <label for="phone">Nomor Telepon</label>
                             @error('phone')
-                                <p class="text-danger">{{ $message }}</p>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -82,23 +99,22 @@
                     <div class="col-12">
                         <div class="form-floating mb-2">
                             <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                id="password" name="password" placeholder="Password"
-                                required>
+                                id="password" name="password" placeholder="Password" required>
                             <label for="password">Password</label>
                             @error('password')
-                                <p class="text-danger">{{ $message }}</p>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
 
-                    <!-- Confirm Password -->
+                    <!-- Konfirmasi Password -->
                     <div class="col-12">
                         <div class="form-floating mb-3">
                             <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
                                 id="password_confirmation" name="password_confirmation" placeholder="Konfirmasi Password" required>
                             <label for="password_confirmation">Konfirmasi Password</label>
                             @error('password_confirmation')
-                                <p class="text-danger">{{ $message }}</p>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -111,7 +127,7 @@
                     <!-- Link ke Login -->
                     <p class="text-center">Sudah punya akun? <a href="{{ route('login') }}">Login di sini</a></p>
                 </form>
-            </div>
+            </div>    
         </div>
     </div>
 

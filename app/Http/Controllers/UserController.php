@@ -28,18 +28,26 @@ class UserController extends Controller
      */
     public function storeRegister(Request $request)
     {
-        // Validasi data input dari formulir registrasi
+        // Validasi dasar terlebih dahulu
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6',
+            'password_confirmation' => 'required|string|min:6',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Membuat user baru
+        // Validasi tambahan untuk memastikan password dan konfirmasi cocok
+        if ($request->password !== $request->password_confirmation) {
+            return redirect()->back()->withErrors([
+                'password_confirmation' => 'Isian konfirmasi password berbeda dengan password.'
+            ])->withInput();
+        }
+
+        // Buat user baru
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -47,12 +55,12 @@ class UserController extends Controller
             'role' => 'user'
         ]);
 
-        // Login otomatis setelah registrasi berhasil
+        // Login otomatis
         Auth::login($user);
 
-        // Redirect ke halaman dashboard user
         return redirect()->route('dashboard')->with('success', 'Registrasi berhasil! Anda telah masuk.');
     }
+
 
     /**
      * Menampilkan daftar pengguna.
@@ -81,7 +89,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => 'nullable|string|max:15',
             'password' => 'required|string|min:6',
-            'role' => 'required|in:admin,user',
+
         ]);
 
         User::create([
@@ -89,7 +97,7 @@ class UserController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
+
         ]);
 
         return redirect()->back()->with('success', 'User berhasil ditambahkan.');

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
 <div class="container">
@@ -15,6 +15,6 @@
         </div>
     </div>
 
-    <a href="{{ route('pengajuan.penelitian.index') }}" class="btn btn-secondary mt-3">Kembali ke Daftar</a>
+    <a href="{{ route('admin.penelitian.index') }}" class="btn btn-secondary mt-3">Kembali ke Daftar</a>
 </div>
 @endsection

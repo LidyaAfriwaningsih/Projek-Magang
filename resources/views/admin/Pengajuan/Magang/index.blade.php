@@ -31,15 +31,23 @@
                             <td>{{ $pengajuan->instansi_tujuan }}</td>
                             <td>{{ $pengajuan->status ?? 'Belum Diproses' }}</td>
                             <td>
-                                <a href="{{ route('admin.magang.show', $pengajuan->id) }}" class="btn btn-primary">Lihat</a>
-                                <form action="{{ route('admin.magang.proses', $pengajuan->id) }}" method="POST"
-                                    style="display:inline;">
+                                <!-- Link untuk melihat pengajuan -->
+                                <a href="{{ route('admin.magang.show', $pengajuan->id) }}" class="btn btn-primary btn-sm">Lihat</a>
+                                
+                                <!-- Form untuk memproses pengajuan -->
+                                <form action="{{ route('admin.magang.proses', $pengajuan->id) }}" method="POST" style="display:inline;">
                                     @csrf
-                                    <button type="submit" class="btn btn-success">Proses</button>
+                                    <button type="submit" class="btn btn-success btn-sm">Proses</button>
                                 </form>
+
+                                <!-- Link untuk cetak pengajuan magang -->
+                                <a href="{{ route('admin.pengajuan.magang.cetak', $pengajuan->id) }}" class="btn btn-secondary btn-sm" target="_blank">
+                                    Cetak
+                                </a>
                             </td>
                         </tr>
                     @endforeach
+
                 </tbody>
             </table>
         </div>

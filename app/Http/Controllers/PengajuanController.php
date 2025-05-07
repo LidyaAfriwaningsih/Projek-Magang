@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pengajuan;
+use App\Http\Controllers\PengajuanController;
+use Barryvdh\DomPDF\Facade\PDF;
 
 class PengajuanController extends Controller
 {
@@ -35,6 +37,8 @@ class PengajuanController extends Controller
         return redirect()->route('pengajuan.magang')->with('success', 'Pengajuan magang berhasil dikirim.');
     }
 
+
+
     // Tampilkan form pengajuan penelitian
     public function penelitian()
     {
@@ -63,6 +67,7 @@ class PengajuanController extends Controller
         return redirect()->route('pengajuan.penelitian')->with('success', 'Pengajuan penelitian berhasil dikirim.');
     }
 
+    
     // ADMIN: Tampilkan semua pengajuan magang
     public function indexMagang()
     {
@@ -97,8 +102,8 @@ class PengajuanController extends Controller
         $pengajuan = Pengajuan::findOrFail($id);
         $pengajuan->status = 'diproses'; // pastikan kolom 'status' ada di tabel
         $pengajuan->save();
-
-        return redirect()->route('pengajuan.admin.magang.index')->with('success', 'Pengajuan magang telah diproses.');
+       // dd("dasdad");
+        return redirect()->route('admin.magang.index')->with('success', 'Pengajuan magang telah diproses.');
     }
 
     // ADMIN: Proses pengajuan penelitian
@@ -107,7 +112,41 @@ class PengajuanController extends Controller
         $pengajuan = Pengajuan::findOrFail($id);
         $pengajuan->status = 'diproses'; // pastikan kolom 'status' ada di tabel
         $pengajuan->save();
+       
+        return redirect()->route('admin.penelitian.index')->with('success', 'Pengajuan penelitian telah diproses.');
+    }
 
-        return redirect()->route('pengajuan.admin.penelitian.index')->with('success', 'Pengajuan penelitian telah diproses.');
+     // ✅ ADMIN: Cetak surat pengajuan magang
+     public function cetakMagang($id)
+     {
+         // Ambil data pengajuan dengan relasi ke user (misal: mahasiswa yang mengajukan)
+         $pengajuan = Pengajuan::with('user')->findOrFail($id);
+         
+         // Menggunakan PDF untuk mencetak surat pengajuan magang
+         $pdf = PDF::loadView('admin.pengajuan.magang.cetak', compact('pengajuan'));
+         
+         // Menyediakan file PDF untuk diunduh dengan nama yang sesuai
+         return $pdf->download('Pengajuan-Magang-'.$pengajuan->user->nama.'.pdf');
+         
+         // Versi PDF lain bisa disediakan, sesuaikan jika diperlukan
+         // $pdf = PDF::loadView('admin.pengajuan.magang.cetak', compact('pengajuan'));
+         // return $pdf->download('Surat_Pengajuan_Magang.pdf');
+     }
+
+      // ✅ ADMIN: Cetak surat pengajuan penelitian
+    public function cetakPenelitian($id)
+    {
+        // Ambil data pengajuan dengan relasi ke user (misal: mahasiswa yang mengajukan)
+        $pengajuan = Pengajuan::with('user')->findOrFail($id);
+        
+        // Menggunakan PDF untuk mencetak surat pengajuan magang
+        $pdf = PDF::loadView('admin.pengajuan.penelitian.cetak', compact('pengajuan'));
+        
+        // Menyediakan file PDF untuk diunduh dengan nama yang sesuai
+        return $pdf->download('Pengajuan-Penelitian-'.$pengajuan->user->nama.'.pdf');
+        
+        // Versi PDF lain bisa disediakan, sesuaikan jika diperlukan
+        // $pdf = PDF::loadView('admin.pengajuan.magang.cetak', compact('pengajuan'));
+        // return $pdf->download('Surat_Pengajuan_Magang.pdf');
     }
 }

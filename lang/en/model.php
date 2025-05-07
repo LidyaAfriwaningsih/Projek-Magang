@@ -10,13 +10,7 @@ return [
         'received_date' => 'Received Date',
         'description' => 'Brief Contents',
         'note' => 'Note',
-        'dispose' => 'Dispose',
         'attachment' => 'Attachment',
-        'status' => [
-            'all' => 'All',
-            'disposed' => 'Disposed',
-            'not_disposed' => 'Not Disposed',
-        ],
         'classification_code' => 'Classification Code',
     ],
     'disposition' => [

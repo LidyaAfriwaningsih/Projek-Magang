@@ -13,7 +13,10 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('nik');
+            // Cek apakah kolom 'nik' ada sebelum menghapusnya
+            if (Schema::hasColumn('users', 'nik')) {
+                $table->dropColumn('nik');
+            }
         });
     }
 
@@ -25,7 +28,10 @@ return new class extends Migration {
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('nik')->nullable();
+            // Tambahkan kolom 'nik' jika tidak ada
+            if (!Schema::hasColumn('users', 'nik')) {
+                $table->string('nik')->nullable();
+            }
         });
     }
 };

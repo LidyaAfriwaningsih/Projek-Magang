@@ -19,7 +19,7 @@ use App\Http\Controllers\LetterStatusController;
 // ✅ Registrasi — Hanya untuk Guest
 Route::middleware('guest')->group(function () {
     Route::get('/register', [UserController::class, 'register'])->name('register');
-    Route::post('/register', [UserController::class, 'store']);
+    Route::post('/register', [UserController::class, 'storeRegister'])->name('register.store');
 });
 
 // ✅ Semua route berikut hanya bisa diakses oleh user yang sudah login
@@ -32,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('role:admin')->group(function () {
         Route::resource('user', UserController::class)->except(['show', 'edit', 'create']);
 
-        // ✅ Pengaturan Aplikasi
+        // ✅ Pengaturan Aplikasiaa
         Route::get('settings', [PageController::class, 'settings'])->name('settings.show');
         Route::put('settings', [PageController::class, 'settingsUpdate'])->name('settings.update');
 
@@ -48,22 +48,34 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/magang', [PengajuanController::class, 'indexMagang'])->name('magang.index');
             Route::get('/magang/{id}', [PengajuanController::class, 'showMagang'])->name('magang.show');
             Route::post('/magang/{id}/proses', [PengajuanController::class, 'prosesMagang'])->name('magang.proses');
+            Route::get('/magang/cetak/{id}', [PengajuanController::class, 'cetakMagang'])->name('pengajuan.magang.cetak');
+            
 
             // Penelitian
             Route::get('/penelitian', [PengajuanController::class, 'indexPenelitian'])->name('penelitian.index');
             Route::get('/penelitian/{id}', [PengajuanController::class, 'showPenelitian'])->name('penelitian.show');
             Route::post('/penelitian/{id}/proses', [PengajuanController::class, 'prosesPenelitian'])->name('penelitian.proses');
+            Route::get('/penelitian/cetak/{id}', [PengajuanController::class, 'cetakPenelitian'])->name('pengajuan.penelitian.cetak');
         });
     });
 
     // ✅ Pengajuan Surat — USER Mengajukan
     Route::middleware(['auth'])->prefix('pengajuan')->as('pengajuan.')->group(function () {
+        // Rute untuk pengajuan magang
         Route::get('/magang', [PengajuanController::class, 'magang'])->name('magang');
         Route::post('/magang', [PengajuanController::class, 'storeMagang'])->name('storeMagang');
-
+        
+        // Rute untuk cetak pengajuan magang
+        Route::get('/admin/pengajuan/magang/cetak/{id}', [PengajuanController::class, 'cetakMagang'])->name('admin.pengajuan.magang.cetak');
+        
+        // Rute untuk pengajuan penelitian
         Route::get('/penelitian', [PengajuanController::class, 'penelitian'])->name('penelitian');
         Route::post('/penelitian', [PengajuanController::class, 'storePenelitian'])->name('storePenelitian');
+        
+        // Rute untuk cetak pengajuan penelitian
+        Route::get('/penelitian/{id}/cetak', [PengajuanController::class, 'cetakPenelitian'])->name('cetakPenelitian');
     });
+    
 
     // ✅ Profil Pengguna
     Route::get('profile', [PageController::class, 'profile'])->name('profile.show');
