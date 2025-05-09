@@ -66,7 +66,7 @@ class PengajuanController extends Controller
                     'status' => 'diajukan',
                     'file_ktp' => $fileKtpPath,
                     'file_surat_dari' => $fileSuratPath,
-                    'kelompok_id' => $kelompokId
+                    'id' => $Id
                 ]);
             }
 
@@ -155,7 +155,7 @@ class PengajuanController extends Controller
             ->with('user')
             ->orderBy('created_at', 'desc')
             ->get()
-            ->groupBy('kelompok_id');
+            ->groupBy('id');
 
         return view('admin.pengajuan.magang.index', compact('pengajuanMagang'));
     }
@@ -170,9 +170,9 @@ class PengajuanController extends Controller
         return view('admin.pengajuan.penelitian.index', compact('pengajuanPenelitian'));
     }
 
-    public function showMagang($kelompok_id)
+    public function showMagang($id)
     {
-        $anggotaKelompok = Pengajuan::where('kelompok_id', $kelompok_id)
+        $anggotaKelompok = Pengajuan::where('id', $id)
             ->with('user')
             ->get();
 
@@ -181,7 +181,7 @@ class PengajuanController extends Controller
         }
 
         return view('admin.pengajuan.magang.show', [
-            'kelompok_id' => $kelompok_id,
+            'id' => $id,
             'anggota' => $anggotaKelompok,
             'dataUtama' => $anggotaKelompok->first()
         ]);
@@ -193,14 +193,14 @@ class PengajuanController extends Controller
         return view('admin.pengajuan.penelitian.show', compact('pengajuan'));
     }
 
-    public function prosesMagang($kelompok_id)
+    public function prosesMagang($id)
     {
         try {
-            $affected = Pengajuan::where('kelompok_id', $kelompok_id)
+            $affected = Pengajuan::where('id', $id)
                 ->update(['status' => 'diproses']);
 
             if ($affected > 0) {
-                return redirect()->route('pengajuan.admin.magang.index')
+                return redirect()->route('admin.magang.index')
                     ->with('success', 'Status pengajuan magang telah diperbarui');
             }
 
@@ -220,7 +220,7 @@ class PengajuanController extends Controller
             $pengajuan->status = 'diproses';
             $pengajuan->save();
 
-            return redirect()->route('pengajuan.admin.penelitian.index')
+            return redirect()->route('admin.penelitian.index')
                 ->with('success', 'Status pengajuan penelitian telah diperbarui');
 
         } catch (\Exception $e) {
