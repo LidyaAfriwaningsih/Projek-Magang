@@ -28,13 +28,13 @@
         }
 
         const chart = new ApexCharts(document.querySelector("#today-graphic"), options);
-
         chart.render();
     </script>
 @endpush
 
 @section('content')
-    @if(auth()->user()->role == 'admin')
+@if(auth()->user()->role == 'admin')
+    {{-- Dashboard untuk Admin --}}
     <div class="row">
         <div class="col-lg-8 mb-4 order-0">
             <div class="card mb-4">
@@ -42,9 +42,7 @@
                     <div class="col-sm-7">
                         <div class="card-body">
                             <h4 class="card-title text-primary">{{ $greeting }}</h4>
-                            <p class="mb-4">
-                                {{ $currentDate }}
-                            </p>
+                            <p class="mb-4">{{ $currentDate }}</p>
                             <p style="font-size: smaller" class="text-gray">*) {{ __('dashboard.today_report') }}</p>
                         </div>
                     </div>
@@ -61,20 +59,19 @@
             <div class="mb-4">
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between flex-sm-row flex-column gap-3"
-                             style="position: relative;">
-                            <div class="">
+                        <div class="d-flex justify-content-between flex-sm-row flex-column gap-3">
+                            <div>
                                 <div class="card-title">
                                     <h5 class="text-nowrap mb-2">{{ __('dashboard.today_graphic') }}</h5>
                                     <span class="badge bg-label-warning rounded-pill">{{ __('dashboard.today') }}</span>
                                 </div>
                                 <div class="mt-sm-auto">
                                     @if($percentageLetterTransaction > 0)
-                                    <small class="text-success text-nowrap fw-semibold">
-                                        <i class="bx bx-chevron-up"></i> {{ $percentageLetterTransaction }}%
-                                    </small>
+                                        <small class="text-success fw-semibold">
+                                            <i class="bx bx-chevron-up"></i> {{ $percentageLetterTransaction }}%
+                                        </small>
                                     @elseif($percentageLetterTransaction < 0)
-                                        <small class="text-danger text-nowrap fw-semibold">
+                                        <small class="text-danger fw-semibold">
                                             <i class="bx bx-chevron-down"></i> {{ $percentageLetterTransaction }}%
                                         </small>
                                     @endif
@@ -89,6 +86,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-lg-4 col-md-4 order-1">
             <div class="row">
                 <div class="col-lg-6 col-md-12 col-6 mb-4">
@@ -134,5 +132,44 @@
             </div>
         </div>
     </div>
-    @endif
+@else
+    {{-- Dashboard untuk User --}}
+    <div class="row">
+        <div class="col-12">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3>Selamat Datang di Sistem Informasi BAKESBANGPOL</h3>
+                    <p class="text-muted">Silakan pilih menu pada sidebar untuk memulai</p>
+
+                    <!-- Carousel -->
+                    <div id="carouselExampleIndicators" class="carousel slide mt-3" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></button>
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></button>
+                        </div>
+                        <div class="carousel-inner rounded shadow">
+                            <div class="carousel-item active">
+                                <img src="{{ asset('sneat/img/bukittinggi.jpg') }}" class="d-block w-100" style="max-height: 400px; object-fit: cover;" alt="Gambar 1">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="{{ asset('sneat/img/cute.jpeg') }}" class="d-block w-100" style="max-height: 400px; object-fit: cover;" alt="Gambar 2">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="{{ asset('sneat/img/cat.jpeg') }}" class="d-block w-100" style="max-height: 400px; object-fit: cover;" alt="Gambar 3">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                    <!-- End Carousel -->
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
 @endsection
