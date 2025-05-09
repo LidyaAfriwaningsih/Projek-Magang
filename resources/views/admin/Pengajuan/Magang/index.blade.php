@@ -22,28 +22,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($pengajuanMagang as $pengajuan)
+                    @foreach ($kelompok as $pengajuan)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $loop->parent->iteration }}.{{ $loop->iteration }}</td>
                             <td>{{ $pengajuan->nama }}</td>
                             <td>{{ $pengajuan->nim }}</td>
                             <td>{{ $pengajuan->program_studi }}</td>
                             <td>{{ $pengajuan->instansi_tujuan }}</td>
                             <td>{{ $pengajuan->status ?? 'Belum Diproses' }}</td>
                             <td>
-                                <!-- Link untuk melihat pengajuan -->
-                                <a href="{{ route('admin.magang.show', $pengajuan->id) }}" class="btn btn-primary btn-sm">Lihat</a>
-                                
-                                <!-- Form untuk memproses pengajuan -->
-                                <form action="{{ route('admin.magang.proses', $pengajuan->id) }}" method="POST" style="display:inline;">
+                                <a href="{{ route('admin.magang.show', $pengajuan->kelompok_id) }}" class="btn btn-primary btn-sm">Lihat</a>
+                                <form action="{{ route('admin.magang.proses', $pengajuan->kelompok_id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     <button type="submit" class="btn btn-success btn-sm">Proses</button>
                                 </form>
-
-                                <!-- Link untuk cetak pengajuan magang -->
-                                <a href="{{ route('admin.pengajuan.magang.cetak', $pengajuan->id) }}" class="btn btn-secondary btn-sm" target="_blank">
-                                    Cetak
-                                </a>
                             </td>
                         </tr>
                     @endforeach
