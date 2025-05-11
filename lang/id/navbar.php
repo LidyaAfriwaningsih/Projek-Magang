@@ -10,5 +10,5 @@ return [
         'deactivate_confirm_message' => 'Apakah Anda yakin ingin menonaktifkan akun Anda?',
         'deactivate_confirm' => 'Saya yakin',
     ],
-    'search' => 'Pencarian...'
+    
 ];

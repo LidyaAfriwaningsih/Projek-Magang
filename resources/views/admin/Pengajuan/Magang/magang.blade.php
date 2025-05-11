@@ -1,9 +1,9 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1 class="mb-4">Form Pengajuan Rekomendasi Magang (Kelompok)</h1>
+    <h1 class="mb-4">Form Pengajuan Rekomendasi Magang</h1>
 
-    <form id="formPengajuan" action="{{ route('pengajuan.magang') }}" method="POST" enctype="multipart/form-data">
+    <form id="formPengajuan" action="{{ route('pengajuan.storeMagang') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div id="mahasiswa-wrapper">
@@ -45,9 +45,25 @@
             </div>
 
             <div class="col-6 mb-3">
+                <label for="hal_surat">Hal Surat</label>
+                <input type="text" name="hal_surat" class="form-control">
+            </div>
+
+            <div class="col-6 mb-3">
                 <label for="tanggal_surat">Tanggal Surat</label>
                 <input type="date" name="tanggal_surat" class="form-control">
             </div>
+
+            <div class="col-6 mb-3">
+                <label for="tanggal_penelitian">Tanggal Magang (Durasi)</label>
+                <div class="d-flex gap-2">
+                    <input type="date" name="tanggal_mulai" class="form-control" placeholder="Mulai">
+                    <span class="align-self-center">s/d</span>
+                    <input type="date" name="tanggal_selesai" class="form-control" placeholder="Selesai">
+                </div>
+            </div>
+
+
 
             <!-- Upload KTP -->
             <div class="col-md-6 mb-3">
@@ -59,7 +75,7 @@
 
             <!-- Upload Surat Dari -->
             <div class="col-md-6 mb-3">
-                <label for="file_surat_dari">Upload Surat Dari</label><br>
+                <label for="file_surat_dari">Upload Surat Pengantar</label><br>
                 <button type="button" class="btn btn-primary" onclick="document.getElementById('file_surat_dari').click()">Pilih File</button>
                 <input type="file" id="file_surat_dari" name="file_surat_dari" class="d-none" onchange="updateLabel(this)">                
                 <span id="file_surat_dari_name" class="ms-2 text-muted">Belum ada file</span>

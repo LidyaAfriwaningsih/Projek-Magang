@@ -6,9 +6,9 @@ use App\Enums\LetterType;
 use App\Helpers\GeneralHelper;
 use App\Http\Requests\UpdateConfigRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Pengajuan;
 use App\Models\Attachment;
 use App\Models\Config;
-use App\Models\Disposition;
 use App\Models\Letter;
 use App\Models\User;
 use Carbon\Carbon;
@@ -28,28 +28,34 @@ class PageController extends Controller
      */
     public function index(Request $request): View
     {
+        $todayPengajuan = Pengajuan::whereDate('created_at', now())->count();
+        $totalPengajuan = Pengajuan::count(); // Total pengajuan untuk perhitungan persentase
+        $percentagePengajuan = $totalPengajuan ? ($todayPengajuan / $totalPengajuan) * 100 : 0;
+
+        // Menghitung jumlah surat masuk dan keluar hari ini
         $todayIncomingLetter = Letter::incoming()->today()->count();
         $todayOutgoingLetter = Letter::outgoing()->today()->count();
-        $todayDispositionLetter = Disposition::today()->count();
-        $todayLetterTransaction = $todayIncomingLetter + $todayOutgoingLetter + $todayDispositionLetter;
+        $todayLetterTransaction = $todayIncomingLetter + $todayOutgoingLetter + $todayPengajuan;
 
+        // Menghitung jumlah surat masuk dan keluar kemarin
         $yesterdayIncomingLetter = Letter::incoming()->yesterday()->count();
         $yesterdayOutgoingLetter = Letter::outgoing()->yesterday()->count();
-        $yesterdayDispositionLetter = Disposition::yesterday()->count();
-        $yesterdayLetterTransaction = $yesterdayIncomingLetter + $yesterdayOutgoingLetter + $yesterdayDispositionLetter;
+        $yesterdayLetterTransaction = $yesterdayIncomingLetter + $yesterdayOutgoingLetter;
 
         return view('pages.dashboard', [
             'greeting' => GeneralHelper::greeting(),
             'currentDate' => Carbon::now()->isoFormat('dddd, D MMMM YYYY'),
             'todayIncomingLetter' => $todayIncomingLetter,
             'todayOutgoingLetter' => $todayOutgoingLetter,
-            'todayDispositionLetter' => $todayDispositionLetter,
             'todayLetterTransaction' => $todayLetterTransaction,
             'activeUser' => User::active()->count(),
             'percentageIncomingLetter' => GeneralHelper::calculateChangePercentage($yesterdayIncomingLetter, $todayIncomingLetter),
             'percentageOutgoingLetter' => GeneralHelper::calculateChangePercentage($yesterdayOutgoingLetter, $todayOutgoingLetter),
-            'percentageDispositionLetter' => GeneralHelper::calculateChangePercentage($yesterdayDispositionLetter, $todayDispositionLetter),
             'percentageLetterTransaction' => GeneralHelper::calculateChangePercentage($yesterdayLetterTransaction, $todayLetterTransaction),
+
+            // Menambahkan data pengajuan
+            'todayPengajuan' => $todayPengajuan,
+            'percentagePengajuan' => $percentagePengajuan,
         ]);
     }
 

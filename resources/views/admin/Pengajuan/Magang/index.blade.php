@@ -22,10 +22,11 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php $no = 1; @endphp
                     @foreach ($pengajuanMagang as $kelompokId => $kelompok)
                         @foreach ($kelompok as $pengajuan)
                             <tr>
-                                <td>{{ $loop->parent->iteration }}.{{ $loop->iteration }}</td>
+                                <td>{{ $no++ }}</td>
                                 <td>{{ $pengajuan->nama }}</td>
                                 <td>{{ $pengajuan->nim }}</td>
                                 <td>{{ $pengajuan->program_studi }}</td>
@@ -37,10 +38,14 @@
                                         @csrf
                                         <button type="submit" class="btn btn-success btn-sm">Proses</button>
                                     </form>
-                                    <!-- Link untuk cetak pengajuan magang -->
                                     <a href="{{ route('admin.pengajuan.magang.cetak', $pengajuan->id) }}" class="btn btn-secondary btn-sm" target="_blank">
                                         Cetak
                                     </a>
+                                    <form action="{{ route('admin.pengajuan.magang.hapus', $pengajuan->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengajuan ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

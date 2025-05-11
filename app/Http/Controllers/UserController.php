@@ -58,7 +58,7 @@ class UserController extends Controller
         // Login otomatis
         Auth::login($user);
 
-        return redirect()->route('dashboard')->with('success', 'Registrasi berhasil! Anda telah masuk.');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Anda telah masuk.');
     }
 
 

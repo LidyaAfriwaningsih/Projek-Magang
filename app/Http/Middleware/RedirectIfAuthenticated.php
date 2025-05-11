@@ -26,12 +26,8 @@ class RedirectIfAuthenticated
 
                 // ✅ Arahkan sesuai peran pengguna
                 if ($user->role === 'admin') {
-                    return redirect()->route('admin.dashboard'); // Sesuaikan dengan route admin
-                } elseif ($user->role === 'user') {
-                    return redirect()->route('user.dashboard'); // Jika ada peran user
-                } else {
-                    return redirect()->route('home'); // Default untuk user biasa
-                }
+                    return redirect()->route('home'); // Sesuaikan dengan route admin
+                } 
             }
         }
 

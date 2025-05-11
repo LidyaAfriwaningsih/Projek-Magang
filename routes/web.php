@@ -46,9 +46,10 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('admin')->as('admin.')->group(function () {
             // Magang
             Route::get('/magang', [PengajuanController::class, 'indexMagang'])->name('magang.index');
-            Route::get('/magang/{id}', [PengajuanController::class, 'showMagang'])->name('magang.show');
-            Route::post('/magang/{id}/proses', [PengajuanController::class, 'prosesMagang'])->name('magang.proses');
-            Route::get('/magang/cetak/{id}', [PengajuanController::class, 'cetakMagang'])->name('pengajuan.magang.cetak');
+            Route::get('/magang/{kelompok_id}', [PengajuanController::class, 'showMagang'])->name('magang.show');
+            Route::post('/magang/{kelompok_id}/proses', [PengajuanController::class, 'prosesMagang'])->name('magang.proses');
+            Route::get('/magang/cetak/{kelompok_id}', [PengajuanController::class, 'cetakMagang'])->name('pengajuan.magang.cetak');
+            Route::delete('magang/{kelompok_id}/hapus', [PengajuanController::class, 'hapusMagang'])->name('pengajuan.magang.hapus');
             
 
             // Penelitian
@@ -56,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/penelitian/{id}', [PengajuanController::class, 'showPenelitian'])->name('penelitian.show');
             Route::post('/penelitian/{id}/proses', [PengajuanController::class, 'prosesPenelitian'])->name('penelitian.proses');
             Route::get('/penelitian/cetak/{id}', [PengajuanController::class, 'cetakPenelitian'])->name('pengajuan.penelitian.cetak');
+            Route::delete('penelitian/{id}/hapus', [PengajuanController::class, 'hapusPenelitian'])->name('pengajuan.penelitian.hapus');
         });
     });
 
@@ -65,15 +67,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/magang', [PengajuanController::class, 'magang'])->name('magang');
         Route::post('/magang', [PengajuanController::class, 'storeMagang'])->name('storeMagang');
         
-        // Rute untuk cetak pengajuan magang
-        Route::get('/admin/pengajuan/magang/cetak/{id}', [PengajuanController::class, 'cetakMagang'])->name('admin.pengajuan.magang.cetak');
+        
         
         // Rute untuk pengajuan penelitian
         Route::get('/penelitian', [PengajuanController::class, 'penelitian'])->name('penelitian');
         Route::post('/penelitian', [PengajuanController::class, 'storePenelitian'])->name('storePenelitian');
         
-        // Rute untuk cetak pengajuan penelitian
-        Route::get('/penelitian/{id}/cetak', [PengajuanController::class, 'cetakPenelitian'])->name('cetakPenelitian');
+    
     });
     
 

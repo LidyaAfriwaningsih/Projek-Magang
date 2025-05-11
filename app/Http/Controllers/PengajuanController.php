@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;  
 use App\Models\Pengajuan;
 use App\Http\Controllers\PengajuanController;
+use App\Models\DetailMahasiswa;
 use Barryvdh\DomPDF\Facade\PDF;
 use Carbon\Carbon;
 
@@ -13,7 +15,7 @@ class PengajuanController extends Controller
     // Tampilkan form pengajuan magang
     public function magang()
     {
-        return view('admin.pengajuan.magang.magang');
+        return view('admin.Pengajuan.Magang.magang');
     }
 
     // Simpan data pengajuan magang (kelompok)
@@ -24,20 +26,34 @@ class PengajuanController extends Controller
             'nama.*' => 'required|string|max:255',
             'nim.*' => 'required|string|max:20|regex:/^[0-9]+$/',
             'program_studi.*' => 'required|string|max:100',
-            'instansi_tujuan' => 'required|string|max:255',
-            'surat_dari' => 'nullable|string|max:255',
-            'nomor_surat' => 'nullable|string|max:100',
-            'tanggal_surat' => 'nullable|date',
-            'file_ktp' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'file_surat_dari' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
+            'instansi_tujuan.*' => 'required|string|max:255',
+            'surat_dari.*' => 'required|string|max:255',
+            'nomor_surat.*' => 'required|string|max:100',
+            'hal_surat.*' => 'required|string|max:100',
+            'tanggal_surat.*' => 'required|date',
+            'tanggal_mulai.*' => 'required|date|before_or_equal:tanggal_selesai', // Validasi tanggal mulai
+            'tanggal_selesai.*' => 'required|date|after_or_equal:tanggal_mulai', // Validasi tanggal selesai
+            'file_ktp.*' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'file_surat_dari.*' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
         ], [
             'nama.*.required' => 'Nama mahasiswa harus diisi',
             'nim.*.required' => 'NIM mahasiswa harus diisi',
             'nim.*.regex' => 'NIM hanya boleh berisi angka',
             'program_studi.*.required' => 'Program studi mahasiswa harus diisi',
             'instansi_tujuan.required' => 'Instansi tujuan magang harus diisi',
+            'surat_dari.required' => 'Surat dari harus diisi',
+            'instansi_tujuan.required' => 'Instansi tujuan magang harus diisi',
+            'surat_dari.*.required' => 'Surat dari harus diisi',
+            'nomor_surat.*.required' => 'Nomor surat harus diisi',
+            'hal_surat.*.required' => 'Hal surat harus diisi',
+            'tanggal_surat.*.required' => 'Tanggal surat harus diisi',
+            'tanggal_mulai.*.required' => 'Tanggal mulai harus diisi',
+            'tanggal_selesai.*.required' => 'Tanggal selesai harus diisi',
             'file_ktp.required' => 'File KTP harus diupload',
-            'file_surat_dari.required' => 'File surat dari kampus harus diupload',
+            'tanggal_mulai.required' => 'Tanggal mulai harus diisi',
+            'tanggal_mulai.before_or_equal' => 'Tanggal mulai tidak boleh lebih dari tanggal selesai',
+            'tanggal_selesai.required' => 'Tanggal selesai harus diisi',
+            'tanggal_selesai.after_or_equal' => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai',
             'file_ktp.mimes' => 'File KTP harus berupa JPG, JPEG, PNG atau PDF',
             'file_surat_dari.mimes' => 'File surat harus berupa JPG, JPEG, PNG atau PDF',
             'file_ktp.max' => 'Ukuran file KTP maksimal 2MB',
@@ -49,11 +65,13 @@ class PengajuanController extends Controller
             $fileKtpPath = $request->file('file_ktp')->store('pengajuan/ktp', 'public');
             $fileSuratPath = $request->file('file_surat_dari')->store('pengajuan/surat', 'public');
 
-            $kelompokId = 'KLMPK-' . date('Ymd') . '-' . substr(uniqid(), -5);
+            // Membuat ID kelompok yang unik
+            $kelompokId = 'KLMPK-' . date('Dmy') . '-' . substr(uniqid(), -5);
 
             // Simpan data pengajuan untuk setiap anggota kelompok
             foreach ($request->nama as $key => $value) {
-                Pengajuan::create([
+                // Simpan data pengajuan untuk anggota
+                $pengajuan = Pengajuan::create([
                     'jenis' => 'magang',
                     'nama' => $value,
                     'nim' => $request->nim[$key],
@@ -61,13 +79,26 @@ class PengajuanController extends Controller
                     'instansi_tujuan' => $request->instansi_tujuan,
                     'surat_dari' => $request->surat_dari,
                     'nomor_surat' => $request->nomor_surat,
+                    'hal_surat' => $request->hal_surat,
                     'tanggal_surat' => $request->tanggal_surat,
                     'user_id' => auth()->id(),
                     'status' => 'diajukan',
                     'file_ktp' => $fileKtpPath,
                     'file_surat_dari' => $fileSuratPath,
-                    'id' => $Id
+                    'kelompok_id' => $kelompokId,
+                    'tanggal_mulai' => $request->tanggal_mulai,
+                    'tanggal_selesai' => $request->tanggal_selesai,
                 ]);
+
+                // Simpan anggota kelompok ke detail_mahasiswa
+                DetailMahasiswa::create([
+                    'pengajuan_id' => $pengajuan->id,
+                    'nama' => $value,
+                    'nim' => $request->nim[$key],
+                    'program_studi' => $request->program_studi[$key],
+                ]);
+
+                \Log::info('Berhasil simpan pengajuan untuk: ' . $value);
             }
 
             return redirect()->route('pengajuan.magang')
@@ -88,54 +119,95 @@ class PengajuanController extends Controller
         }
     }
 
+
     // Tampilkan form pengajuan penelitian
     public function penelitian()
+        {
+            return view('admin.Pengajuan.Penelitian.penelitian');
+        }
+        public function storePenelitian(Request $request)
     {
-        return view('admin.pengajuan.penelitian.penelitian');
-    }
-
-    public function storePenelitian(Request $request)
-    {
+        // Validasi input
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'tempat_tanggal_lahir' => 'required|string|max:255',
-            'pekerjaan' => 'required|string|max:255',
-            'alamat' => 'required|string|max:500',
-            'nomor_identifikasi' => 'required|string|max:100',
-            'judul_penelitian' => 'required|string|max:255',
-            'untuk' => 'required|string|max:255',
-            'file_identitas' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'file_proposal' => 'required|file|mimes:pdf|max:5120'
+            'nama.*' => 'required|string|max:255',
+            'nim.*' => 'required|string|max:16|regex:/^[0-9]+$/',
+            'nomor_identitas.*' => 'required|string|max:16|regex:/^[0-9]+$/',
+            'Pekerjaan.*' => 'required|string|max:50',
+            'alamat.*' => 'required|string|max:255',
+            'tempat_lahir.*' => 'required|string|max:50',
+            'tanggal_lahir.*' => 'required|date',
+            'instansi_tujuan.*' => 'required|string|max:255',
+            'judul_penelitian.*' => 'required|string|max:255',
+            'surat_dari.*' => 'required|string|max:255',
+            'nomor_surat.*' => 'required|string|max:100',
+            'hal_surat.*' => 'required|string|max:100',
+            'tanggal_surat.*' => 'required|date',
+            'tanggal_mulai.*' => 'required|date|before_or_equal:tanggal_selesai', // Validasi tanggal mulai
+            'tanggal_selesai.*' => 'required|date|after_or_equal:tanggal_mulai', // Validasi tanggal selesai
+            'file_ktp.*' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'file_surat_dari.*' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
         ], [
-            'file_identitas.required' => 'File identitas harus diupload',
-            'file_proposal.required' => 'File proposal penelitian harus diupload',
-            'file_proposal.mimes' => 'File proposal harus berupa PDF',
-            'file_proposal.max' => 'Ukuran file proposal maksimal 5MB'
+            'nama.*.required' => 'Nama mahasiswa harus diisi',
+            'nomor_identitas.*.required' => 'Nomor identitas mahasiswa harus diisi',
+            'nomor_identitas.*.regex' => 'Nomor identitas (KTP) hanya boleh berisi angka',
+            'pekerjaan.*.required' => 'Pekerjaan harus diisi',
+            'alamat.*.required' => 'Alamat harus diisi',
+            'tempat_lahir.*.required' => 'Tempat lahir harus diisi',
+            'tanggal_lahir.*.required' => 'Tanggal lahir harus diisi',
+            'instansi_tujuan.required' => 'Instansi tujuan penelitian harus diisi',
+            'judul_penelitian.*.required' => 'Judul penelitian harus diisi',
+            'surat_dari.*.required' => 'Surat dari harus diisi',
+            'nomor_surat.*.required' => 'Nomor surat harus diisi',
+            'hal_surat.*.required' => 'Hal surat harus diisi',
+            'tanggal_surat.*.required' => 'Tanggal surat harus diisi',
+            'tanggal_mulai.*.required' => 'Tanggal mulai harus diisi',
+            'tanggal_selesai.*.required' => 'Tanggal selesai harus diisi',
+            'file_ktp.required' => 'File KTP harus diupload',
+            'tanggal_mulai.required' => 'Tanggal mulai harus diisi',
+            'tanggal_mulai.before_or_equal' => 'Tanggal mulai tidak boleh lebih dari tanggal selesai',
+            'tanggal_selesai.required' => 'Tanggal selesai harus diisi',
+            'tanggal_selesai.after_or_equal' => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai',
+            'file_ktp.mimes' => 'File KTP harus berupa JPG, JPEG, PNG atau PDF',
+            'file_surat_dari.mimes' => 'File surat harus berupa JPG, JPEG, PNG atau PDF',
+            'file_ktp.max' => 'Ukuran file KTP maksimal 2MB',
+            'file_surat_dari.max' => 'Ukuran file surat maksimal 2MB'
         ]);
 
         try {
-            $fileIdentitasPath = $request->file('file_identitas')->store('penelitian/identitas', 'public');
-            $fileProposalPath = $request->file('file_proposal')->store('penelitian/proposal', 'public');
+            $fileKtpPath = $request->file('file_ktp')->store('pengajuan/ktp', 'public');
+            $fileSuratPath = $request->file('file_surat_dari')->store('pengajuan/surat', 'public');
 
+            // Simpan data pengajuan penelitian ke dalam database
             Pengajuan::create([
                 'jenis' => 'penelitian',
                 'nama' => $request->nama,
-                'tempat_tanggal_lahir' => $request->tempat_tanggal_lahir,
+                'nim' => $request->nim,
+                'tempat_lahir' => $request->tempat_lahir,
+                'tanggal_lahir' => $request->tanggal_lahir,
                 'pekerjaan' => $request->pekerjaan,
                 'alamat' => $request->alamat,
-                'nomor_identifikasi' => $request->nomor_identifikasi,
+                'surat_dari' => $request->surat_dari,
+                'hal_surat' => $request->hal_surat,
+                'tanggal_surat' => $request->tanggal_surat,
+                'nomor_surat' => $request->nomor_surat,
+                'nomor_identitas' => $request->nomor_identitas,
                 'judul_penelitian' => $request->judul_penelitian,
-                'untuk' => $request->untuk,
+                'instansi_tujuan' => $request->instansi_tujuan,
                 'user_id' => auth()->id(),
                 'status' => 'diajukan',
-                'file_ktp' => $fileIdentitasPath,
-                'file_surat_dari' => $fileProposalPath
+                'file_ktp' => $fileKtpPath,
+                'file_surat_dari' => $fileSuratPath,
+                'tanggal_mulai' => $request->tanggal_mulai,
+                'tanggal_selesai' => $request->tanggal_selesai,
             ]);
+
+            \Log::info('Berhasil simpan pengajuan penelitian untuk: ' . $request->nama);
 
             return redirect()->route('pengajuan.penelitian')
                 ->with('success', 'Pengajuan penelitian berhasil dikirim!');
 
         } catch (\Exception $e) {
+            // Hapus file yang sudah terupload jika ada error
             if (isset($fileIdentitasPath)) {
                 Storage::disk('public')->delete($fileIdentitasPath);
             }
@@ -145,7 +217,7 @@ class PengajuanController extends Controller
 
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Gagal mengirim pengajuan: ' . $e->getMessage());
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -155,9 +227,9 @@ class PengajuanController extends Controller
             ->with('user')
             ->orderBy('created_at', 'desc')
             ->get()
-            ->groupBy('id');
+            ->groupBy('kelompok_id');
 
-        return view('admin.pengajuan.magang.index', compact('pengajuanMagang'));
+        return view('admin.Pengajuan.Magang.index', compact('pengajuanMagang'));
     }
 
     public function indexPenelitian()
@@ -167,30 +239,42 @@ class PengajuanController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('admin.pengajuan.penelitian.index', compact('pengajuanPenelitian'));
+        return view('admin.Pengajuan.Penelitian.index', compact('pengajuanPenelitian'));
     }
 
     public function showMagang($id)
     {
-        $anggotaKelompok = Pengajuan::where('id', $id)
-            ->with('user')
+
+        // Ambil data pengajuan dengan relasi ke mahasiswa
+        $pengajuan = Pengajuan::with('user')->findOrFail($id);
+
+        $pengajuan->tanggal_mulai = \Carbon\Carbon::parse($pengajuan->tanggal_mulai)->format('d-m-Y');
+        $pengajuan->tanggal_selesai = \Carbon\Carbon::parse($pengajuan->tanggal_selesai)->format('d-m-Y');
+
+        // Ambil kelompok_id dari data pengajuan
+        $kelompokId = $pengajuan->kelompok_id;
+
+        // Ambil anggota kelompok berdasarkan kelompok_id
+        $anggotaKelompok = Pengajuan::where('kelompok_id', $kelompokId)
+            ->with('user') // Mengambil relasi user untuk setiap anggota kelompok
             ->get();
 
+        // Jika anggota kelompok tidak ada, tampilkan error
         if ($anggotaKelompok->isEmpty()) {
-            abort(404);
+            abort(404); // Jika tidak ada anggota kelompok
         }
 
-        return view('admin.pengajuan.magang.show', [
-            'id' => $id,
-            'anggota' => $anggotaKelompok,
-            'dataUtama' => $anggotaKelompok->first()
+        // Kirimkan data ke view, termasuk data pengajuan dan anggota kelompok
+        return view('admin.Pengajuan.Magang.show', [
+            'pengajuan' => $pengajuan,          // Kirim data pengajuan
+            'anggotaKelompok' => $anggotaKelompok, // Kirim anggota kelompok
         ]);
     }
 
     public function showPenelitian($id)
     {
         $pengajuan = Pengajuan::with('user')->findOrFail($id);
-        return view('admin.pengajuan.penelitian.show', compact('pengajuan'));
+        return view('admin.Pengajuan.Penelitian.show', compact('pengajuan'));
     }
 
     public function prosesMagang($id)
@@ -290,5 +374,30 @@ class PengajuanController extends Controller
         // $pdf = PDF::loadView('admin.pengajuan.magang.cetak', compact('pengajuan'));
         // return $pdf->download('Surat_Pengajuan_Magang.pdf');
     }
+
+    public function hapusMagang($id)
+    {
+        // Temukan pengajuan magang berdasarkan ID
+        $pengajuan = Pengajuan::findOrFail($id);
+
+        // Hapus pengajuan magang
+        $pengajuan->delete();
+
+        // Redirect ke halaman index dengan pesan sukses
+        return redirect()->route('admin.magang.index')->with('success', 'Pengajuan Magang berhasil dihapus');
+    }
+
+    public function hapusPenelitian($id)
+    {
+        // Temukan pengajuan magang berdasarkan ID
+        $pengajuan = Pengajuan::findOrFail($id);
+
+        // Hapus pengajuan magang
+        $pengajuan->delete();
+
+        // Redirect ke halaman index dengan pesan sukses
+        return redirect()->route('admin.penelitian.index')->with('success', 'Pengajuan Magang berhasil dihapus');
+    }
+
     
 }

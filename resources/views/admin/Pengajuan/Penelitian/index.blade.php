@@ -14,8 +14,7 @@
                     <tr>
                         <th>#</th>
                         <th>Nama</th>
-                        <th>NIM</th>
-                        <th>Program Studi</th>
+                        <th>Nomor Identitas (KTP)</th>
                         <th>Judul Penelitian</th>
                         <th>Status</th>
                         <th>Aksi</th>
@@ -26,8 +25,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $pengajuan->nama }}</td>
-                            <td>{{ $pengajuan->nim }}</td>
-                            <td>{{ $pengajuan->program_studi }}</td>
+                            <td>{{ $pengajuan->nomor_identitas }}</td>
                             <td>{{ $pengajuan->judul_penelitian }}</td>
                             <td>{{ $pengajuan->status ?? 'Belum Diproses' }}</td>
                             <td>
@@ -37,12 +35,15 @@
                                     @csrf
                                     <button type="submit" class="btn btn-success btn-sm">Proses</button>
                                 </form>
-                                
-                                
                                 <!-- Link untuk cetak pengajuan magang -->
                                 <a href="{{ route('admin.pengajuan.penelitian.cetak', $pengajuan->id) }}" class="btn btn-secondary btn-sm" target="_blank">
                                     Cetak
                                 </a>
+                                <form action="{{ route('admin.pengajuan.penelitian.hapus', $pengajuan->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengajuan ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach

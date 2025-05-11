@@ -138,10 +138,6 @@ class Letter extends Model
     /**
      * @return HasMany
      */
-    public function dispositions(): HasMany
-    {
-        return $this->hasMany(Disposition::class, 'letter_id', 'id');
-    }
 
     /**
      * @return HasMany

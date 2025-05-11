@@ -17,7 +17,7 @@
     class="light-style layout-menu-fixed"
     dir="ltr"
     data-theme="theme-default"
-    data-assets-path="{{ asset('public/sneat/') }}"
+    data-assets-path="{{('public/') }}"
     data-template="vertical-menu-template-free"
 >
 <head>
@@ -31,8 +31,7 @@
 
     <meta name="description" content=""/>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('logo-black.png') }}"/>
+   
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -87,10 +86,6 @@
                     @yield('content')
                 </div>
                 <!-- / Content -->
-
-                <!-- Footer -->
-                @include('components.footer')
-                <!-- / Footer -->
 
                 <div class="content-backdrop fade"></div>
             </div>

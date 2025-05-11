@@ -28,11 +28,22 @@
             @endif
         </div>
         <span class="fw-semibold d-block mb-1">{{ $label }} {{ $daily ? '*' : '' }}</span>
-        <h3 class="card-title mb-2">{{ $value }}</h3>
-        @if($percentage > 0)
-            <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> {{ $percentage }}%</small>
-        @elseif($percentage < 0)
-            <small class="text-danger fw-semibold"><i class="bx bx-down-arrow-alt"></i> {{ $percentage }}%</small>
+        
+        <!-- Menampilkan jumlah pengajuan hari ini -->
+        @if($label == __('dashboard.pengajuan_hari_ini')) <!-- Sesuaikan dengan label yang sesuai -->
+            <h3 class="card-title mb-2">{{ $todayPengajuan }} Pengajuan Hari Ini</h3>
+            @if($percentagePengajuan > 0)
+                <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> {{ $percentagePengajuan }}%</small>
+            @elseif($percentagePengajuan < 0)
+                <small class="text-danger fw-semibold"><i class="bx bx-down-arrow-alt"></i> {{ $percentagePengajuan }}%</small>
+            @endif
+        @else
+            <h3 class="card-title mb-2">{{ $value }}</h3>
+            @if($percentage > 0)
+                <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> {{ $percentage }}%</small>
+            @elseif($percentage < 0)
+                <small class="text-danger fw-semibold"><i class="bx bx-down-arrow-alt"></i> {{ $percentage }}%</small>
+            @endif
         @endif
     </div>
 </div>

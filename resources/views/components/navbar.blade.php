@@ -9,24 +9,7 @@
     </div>
 
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-        <!-- Search -->
-        <form action="{{ url()->current() }}">
-            <div class="navbar-nav align-items-center">
-                <div class="nav-item d-flex align-items-center">
-                    <i class="bx bx-search fs-4 lh-0"></i>
-                    <input
-                        type="text"
-                        name="search"
-                        value="{{ $search ?? '' }}"
-                        class="form-control border-0 shadow-none"
-                        placeholder="{{ __('navbar.search') }}"
-                        aria-label="{{ __('navbar.search') }}"
-                    />
-
-                </div>
-            </div>
-        </form>
-        <!-- /Search -->
+        
 
         <ul class="navbar-nav flex-row align-items-center ms-auto">
             <!-- User -->
