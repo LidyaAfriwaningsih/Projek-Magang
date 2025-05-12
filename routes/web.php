@@ -48,34 +48,39 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/magang', [PengajuanController::class, 'indexMagang'])->name('magang.index');
             Route::get('/magang/{kelompok_id}', [PengajuanController::class, 'showMagang'])->name('magang.show');
             Route::post('/magang/{kelompok_id}/proses', [PengajuanController::class, 'prosesMagang'])->name('magang.proses');
+            Route::post('/magang/{kelompok_id}/selesai', [PengajuanController::class, 'selesaiMagang'])->name('magang.selesai');
             Route::get('/magang/cetak/{kelompok_id}', [PengajuanController::class, 'cetakMagang'])->name('pengajuan.magang.cetak');
             Route::delete('magang/{kelompok_id}/hapus', [PengajuanController::class, 'hapusMagang'])->name('pengajuan.magang.hapus');
-            
-
+           
             // Penelitian
             Route::get('/penelitian', [PengajuanController::class, 'indexPenelitian'])->name('penelitian.index');
             Route::get('/penelitian/{id}', [PengajuanController::class, 'showPenelitian'])->name('penelitian.show');
             Route::post('/penelitian/{id}/proses', [PengajuanController::class, 'prosesPenelitian'])->name('penelitian.proses');
+            Route::post('/penelitian/{id}/selesai', [PengajuanController::class, 'selesaiPenelitian'])->name('penelitian.selesai');
             Route::get('/penelitian/cetak/{id}', [PengajuanController::class, 'cetakPenelitian'])->name('pengajuan.penelitian.cetak');
             Route::delete('penelitian/{id}/hapus', [PengajuanController::class, 'hapusPenelitian'])->name('pengajuan.penelitian.hapus');
         });
     });
 
+
     // ✅ Pengajuan Surat — USER Mengajukan
     Route::middleware(['auth'])->prefix('pengajuan')->as('pengajuan.')->group(function () {
+        
         // Rute untuk pengajuan magang
         Route::get('/magang', [PengajuanController::class, 'magang'])->name('magang');
         Route::post('/magang', [PengajuanController::class, 'storeMagang'])->name('storeMagang');
         
-        
-        
         // Rute untuk pengajuan penelitian
         Route::get('/penelitian', [PengajuanController::class, 'penelitian'])->name('penelitian');
         Route::post('/penelitian', [PengajuanController::class, 'storePenelitian'])->name('storePenelitian');
+
         
-    
+        
     });
-    
+
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/status', [PengajuanController::class, 'statusUser'])->name('user.pengajuan.index');
+    });
 
     // ✅ Profil Pengguna
     Route::get('profile', [PageController::class, 'profile'])->name('profile.show');

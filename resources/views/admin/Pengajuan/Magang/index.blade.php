@@ -9,7 +9,7 @@
             <div class="mb-3">
                 <input type="text" class="form-control" id="searchMagang" placeholder="Cari...">
             </div>
-            <table class="table">
+            <table class="table" id="magangTable">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -41,6 +41,10 @@
                                     <a href="{{ route('admin.pengajuan.magang.cetak', $pengajuan->id) }}" class="btn btn-secondary btn-sm" target="_blank">
                                         Cetak
                                     </a>
+                                    <form action="{{ route('admin.magang.selesai', $pengajuan->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm">Selesai</button>
+                                    </form>
                                     <form action="{{ route('admin.pengajuan.magang.hapus', $pengajuan->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengajuan ini?');">
                                         @csrf
                                         @method('DELETE')
@@ -54,4 +58,27 @@
             </table>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById("searchMagang").addEventListener("input", function() {
+                var searchTerm = this.value.toLowerCase();
+                var rows = document.querySelectorAll("#magangTable tbody tr");
+
+                rows.forEach(function(row) {
+                    var cells = row.getElementsByTagName("td");
+                    var matchFound = false;
+
+                    for (var i = 0; i < cells.length - 1; i++) { // Tidak cek kolom Aksi
+                        if (cells[i].textContent.toLowerCase().includes(searchTerm)) {
+                            matchFound = true;
+                            break;
+                        }
+                    }
+
+                    row.style.display = matchFound ? "" : "none";
+                });
+            });
+        });
+    </script>
 @endsection

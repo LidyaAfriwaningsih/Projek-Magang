@@ -26,6 +26,13 @@ return [
         'internship' => 'Surat Rekomendasi Magang',
         'research' => 'Surat Keterangan Penelitian',
     ],
+
+    // ✅ Menu Pengajuan (Baru)
+    'submission' => [
+        'menu' => 'Riwayat',
+        'internship' => 'Surat Rekomendasi Magang',
+        'research' => 'Surat Keterangan Penelitian',
+    ],
     'reference' => [
         'menu' => 'Referensi',
         'classification' => 'Klasifikasi Surat',

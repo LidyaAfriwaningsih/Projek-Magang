@@ -8,6 +8,7 @@ use App\Models\Pengajuan;
 use App\Http\Controllers\PengajuanController;
 use App\Models\DetailMahasiswa;
 use Barryvdh\DomPDF\Facade\PDF;
+use PhpOffice\PhpWord\TemplateProcessor;
 use Carbon\Carbon;
 
 class PengajuanController extends Controller
@@ -389,15 +390,67 @@ class PengajuanController extends Controller
 
     public function hapusPenelitian($id)
     {
-        // Temukan pengajuan magang berdasarkan ID
+        // Temukan pengajuan penelitian berdasarkan ID
         $pengajuan = Pengajuan::findOrFail($id);
 
-        // Hapus pengajuan magang
+        // Hapus pengajuan penelitian
         $pengajuan->delete();
 
         // Redirect ke halaman index dengan pesan sukses
         return redirect()->route('admin.penelitian.index')->with('success', 'Pengajuan Magang berhasil dihapus');
     }
 
+    public function selesaiMagang($id)
+    {
+        try {
+            $pengajuan = Pengajuan::findOrFail($id);
+
+            // Cek apakah status saat ini adalah 'diproses'
+            if ($pengajuan->status !== 'diproses') {
+                return redirect()->back()
+                    ->with('error', 'Hanya pengajuan yang berstatus "diproses" yang bisa diselesaikan.');
+            }
+
+            $pengajuan->status = 'selesai';
+            $pengajuan->save();
+
+            return redirect()->route('admin.magang.index')
+                ->with('success', 'Status pengajuan penelitian telah diperbarui menjadi selesai.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal memperbarui status: ' . $e->getMessage());
+        }
+    }
+
+    public function selesaiPenelitian($id)
+    {
+        try {
+            $pengajuan = Pengajuan::findOrFail($id);
+
+            // Cek apakah status saat ini adalah 'diproses'
+            if ($pengajuan->status !== 'diproses') {
+                return redirect()->back()
+                    ->with('error', 'Hanya pengajuan yang berstatus "diproses" yang bisa diselesaikan.');
+            }
+
+            $pengajuan->status = 'selesai';
+            $pengajuan->save();
+
+            return redirect()->route('admin.penelitian.index')
+                ->with('success', 'Status pengajuan penelitian telah diperbarui menjadi selesai.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal memperbarui status: ' . $e->getMessage());
+        }
+    }
     
+    public function statusUser()
+    {
+        $pengajuan = Pengajuan::where('user_id', auth()->id())->get();
+
+        return view('user.Pengajuan.index', compact('pengajuan'));
+    }
+
 }

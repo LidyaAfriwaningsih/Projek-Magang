@@ -9,7 +9,7 @@
             <div class="mb-3">
                 <input type="text" class="form-control" id="searchPenelitian" placeholder="Cari...">
             </div>
-            <table class="table">
+            <table class="table" id="penelitianTable">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -35,6 +35,10 @@
                                     @csrf
                                     <button type="submit" class="btn btn-success btn-sm">Proses</button>
                                 </form>
+                                <form action="{{ route('admin.penelitian.selesai', $pengajuan->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success btn-sm">Selesai</button>
+                                </form>
                                 <!-- Link untuk cetak pengajuan magang -->
                                 <a href="{{ route('admin.pengajuan.penelitian.cetak', $pengajuan->id) }}" class="btn btn-secondary btn-sm" target="_blank">
                                     Cetak
@@ -51,4 +55,27 @@
             </table>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById("searchPenelitian").addEventListener("input", function() {
+                var searchTerm = this.value.toLowerCase();
+                var rows = document.querySelectorAll("#penelitianTable tbody tr");
+
+                rows.forEach(function(row) {
+                    var cells = row.getElementsByTagName("td");
+                    var matchFound = false;
+
+                    for (var i = 0; i < cells.length - 1; i++) { // Jangan cek kolom Aksi
+                        if (cells[i].textContent.toLowerCase().includes(searchTerm)) {
+                            matchFound = true;
+                            break;
+                        }
+                    }
+
+                    row.style.display = matchFound ? "" : "none";
+                });
+            });
+        });
+    </script>
 @endsection

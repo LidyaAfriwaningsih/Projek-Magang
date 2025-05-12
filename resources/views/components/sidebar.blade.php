@@ -96,6 +96,7 @@
                             <div>Surat Rekomendasi Penelitian</div>
                         </a>
                     </li>
+                    
                 @else
                     <li class="menu-item {{ request()->routeIs('pengajuan.magang') ? 'active' : '' }}">
                         <a href="{{ route('pengajuan.magang') }}" class="menu-link">
@@ -107,7 +108,13 @@
                             <div>Surat Rekomendasi Penelitian</div>
                         </a>
                     </li>
+                    <li class="menu-item {{ request()->routeIs('pengajuan.status') ? 'active' : '' }}">
+                        <a href="{{ route('user.pengajuan.index') }}" class="menu-link">
+                            <div>Riwayat Pengajuan</div>
+                        </a>
+                    </li>
                 @endif
+
             </ul>
         </li>
 
