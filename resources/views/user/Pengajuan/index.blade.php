@@ -12,7 +12,7 @@
                 <div class="mb-3">
                     <input type="text" class="form-control" id="searchPengajuan" placeholder="Cari...">
                 </div>
-                <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped" id="pengajuanTable">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -45,4 +45,27 @@
             @endif
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById("searchPengajuan").addEventListener("input", function() {
+                var searchTerm = this.value.toLowerCase();
+                var rows = document.querySelectorAll("#pengajuanTable tbody tr");
+
+                rows.forEach(function(row) {
+                    var cells = row.getElementsByTagName("td");
+                    var matchFound = false;
+
+                    for (var i = 1; i < cells.length; i++) { // Mulai dari kolom "Jenis", bukan "#"
+                        if (cells[i].textContent.toLowerCase().includes(searchTerm)) {
+                            matchFound = true;
+                            break;
+                        }
+                    }
+
+                    row.style.display = matchFound ? "" : "none";
+                });
+            });
+        });
+    </script>
 @endsection
