@@ -93,7 +93,7 @@
                     </li>
                     <li class="menu-item {{ request()->routeIs('admin.penelitian.*') ? 'active' : '' }}">
                         <a href="{{ route('admin.penelitian.index') }}" class="menu-link">
-                            <div>Surat Rekomendasi Penelitian</div>
+                            <div>Surat Keterangan Penelitian</div>
                         </a>
                     </li>
                     
@@ -108,7 +108,7 @@
                             <div>Surat Rekomendasi Penelitian</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->routeIs('pengajuan.status') ? 'active' : '' }}">
+                    <li class="menu-item {{ request()->routeIs('user.pengajuan.index') ? 'active' : '' }}">
                         <a href="{{ route('user.pengajuan.index') }}" class="menu-link">
                             <div>Riwayat Pengajuan</div>
                         </a>
