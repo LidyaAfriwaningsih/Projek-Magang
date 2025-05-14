@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/magang/{kelompok_id}/selesai', [PengajuanController::class, 'selesaiMagang'])->name('magang.selesai');
             Route::get('/magang/cetak/{kelompok_id}', [PengajuanController::class, 'cetakMagang'])->name('pengajuan.magang.cetak');
             Route::delete('magang/{kelompok_id}/hapus', [PengajuanController::class, 'hapusMagang'])->name('pengajuan.magang.hapus');
+            
            
             // Penelitian
             Route::get('/penelitian', [PengajuanController::class, 'indexPenelitian'])->name('penelitian.index');
@@ -68,19 +69,28 @@ Route::middleware(['auth'])->group(function () {
         
         // Rute untuk pengajuan magang
         Route::get('/magang', [PengajuanController::class, 'magang'])->name('magang');
-        Route::post('/magang', [PengajuanController::class, 'storeMagang'])->name('storeMagang');
+        Route::post('/magang', [PengajuanController::class, 'storeMagang'])->name('magang.store');
         
         // Rute untuk pengajuan penelitian
         Route::get('/penelitian', [PengajuanController::class, 'penelitian'])->name('penelitian');
         Route::post('/penelitian', [PengajuanController::class, 'storePenelitian'])->name('storePenelitian');
 
         
-        
     });
 
     Route::middleware(['auth'])->group(function () {
         Route::get('/status', [PengajuanController::class, 'statusUser'])->name('user.pengajuan.index');
+
+        //panduan
+        Route::get('/panduan', function () {
+            return view('admin.panduan.index');
+        })->name('panduan.index');
+
+        //tentang
+        Route::view('/admin/tentang', 'admin.tentang.index')->name('admin.tentang.index');
     });
+
+
 
     // ✅ Profil Pengguna
     Route::get('profile', [PageController::class, 'profile'])->name('profile.show');

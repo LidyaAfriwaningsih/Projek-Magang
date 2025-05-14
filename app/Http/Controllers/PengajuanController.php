@@ -13,16 +13,15 @@ use Carbon\Carbon;
 
 class PengajuanController extends Controller
 {
-    // Tampilkan form pengajuan magang
+    // Form pengajuan magang
     public function magang()
     {
         return view('admin.Pengajuan.Magang.magang');
     }
 
-    // Simpan data pengajuan magang (kelompok)
+    // Simpan data magang
     public function storeMagang(Request $request)
     {
-        // Validasi form input
         $request->validate([
             'nama.*' => 'required|string|max:255',
             'nim.*' => 'required|string|max:20|regex:/^[0-9]+$/',
@@ -62,14 +61,12 @@ class PengajuanController extends Controller
         ]);
 
         try {
-            // Upload file
             $fileKtpPath = $request->file('file_ktp')->store('pengajuan/ktp', 'public');
             $fileSuratPath = $request->file('file_surat_dari')->store('pengajuan/surat', 'public');
 
             // Membuat ID kelompok yang unik
             $kelompokId = 'KLMPK-' . date('Dmy') . '-' . substr(uniqid(), -5);
 
-            // Simpan data pengajuan untuk setiap anggota kelompok
             foreach ($request->nama as $key => $value) {
                 // Simpan data pengajuan untuk anggota
                 $pengajuan = Pengajuan::create([
@@ -106,22 +103,14 @@ class PengajuanController extends Controller
                 ->with('success', 'Pengajuan magang berhasil dikirim!');
 
         } catch (\Exception $e) {
-            // Hapus file yang sudah terupload jika ada error
-            if (isset($fileKtpPath)) {
-                Storage::disk('public')->delete($fileKtpPath);
-            }
-            if (isset($fileSuratPath)) {
-                Storage::disk('public')->delete($fileSuratPath);
-            }
-
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            if (isset($fileKtpPath)) Storage::disk('public')->delete($fileKtpPath);
+            if (isset($fileSuratPath)) Storage::disk('public')->delete($fileSuratPath);
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
 
-    // Tampilkan form pengajuan penelitian
+    // Form pengajuan penelitian
     public function penelitian()
         {
             return view('admin.Pengajuan.Penelitian.penelitian');
@@ -204,9 +193,7 @@ class PengajuanController extends Controller
 
             \Log::info('Berhasil simpan pengajuan penelitian untuk: ' . $request->nama);
 
-            return redirect()->route('pengajuan.penelitian')
-                ->with('success', 'Pengajuan penelitian berhasil dikirim!');
-
+            return redirect()->route('pengajuan.penelitian')->with('success', 'Pengajuan penelitian berhasil dikirim!');
         } catch (\Exception $e) {
             // Hapus file yang sudah terupload jika ada error
             if (isset($fileIdentitasPath)) {
@@ -222,10 +209,10 @@ class PengajuanController extends Controller
         }
     }
 
+    // Admin: daftar pengajuan magang
     public function indexMagang()
     {
         $pengajuanMagang = Pengajuan::where('jenis', 'magang')
-            ->with('user')
             ->orderBy('created_at', 'desc')
             ->get()
             ->groupBy('kelompok_id');
@@ -233,10 +220,10 @@ class PengajuanController extends Controller
         return view('admin.Pengajuan.Magang.index', compact('pengajuanMagang'));
     }
 
+    // Admin: daftar pengajuan penelitian
     public function indexPenelitian()
     {
         $pengajuanPenelitian = Pengajuan::where('jenis', 'penelitian')
-            ->with('user')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -272,6 +259,7 @@ class PengajuanController extends Controller
         ]);
     }
 
+    // Detail pengajuan penelitian
     public function showPenelitian($id)
     {
         $pengajuan = Pengajuan::with('user')->findOrFail($id);
@@ -293,15 +281,15 @@ class PengajuanController extends Controller
                 ->with('error', 'Tidak ada data pengajuan yang ditemukan');
 
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Gagal memperbarui status: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal memperbarui status: ' . $e->getMessage());
         }
     }
 
+    // Update status penelitian ke "diproses"
     public function prosesPenelitian($id)
     {
         try {
-            $pengajuan = Pengajuan::findOrFail($id);
+            $pengajuan = Pengajuan::where('jenis', 'penelitian')->findOrFail($id);
             $pengajuan->status = 'diproses';
             $pengajuan->save();
 
@@ -309,11 +297,11 @@ class PengajuanController extends Controller
                 ->with('success', 'Status pengajuan penelitian telah diperbarui');
 
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Gagal memperbarui status: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal memperbarui status: ' . $e->getMessage());
         }
     }
 
+    // Tolak pengajuan magang atau penelitian
     public function tolakPengajuan(Request $request, $id)
     {
         $request->validate([
@@ -326,16 +314,13 @@ class PengajuanController extends Controller
             $pengajuan->alasan_penolakan = $request->alasan_penolakan;
             $pengajuan->save();
 
-            $route = $pengajuan->jenis === 'magang' 
-                ? 'pengajuan.admin.magang.index' 
+            $route = $pengajuan->jenis === 'magang'
+                ? 'pengajuan.admin.magang.index'
                 : 'pengajuan.admin.penelitian.index';
 
-            return redirect()->route($route)
-                ->with('success', 'Pengajuan telah ditolak');
-    
+            return redirect()->route($route)->with('success', 'Pengajuan telah ditolak');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Gagal menolak pengajuan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menolak pengajuan: ' . $e->getMessage());
         }
     }    
      // ✅ ADMIN: Cetak surat pengajuan magang

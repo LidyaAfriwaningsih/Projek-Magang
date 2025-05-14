@@ -1,50 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Rekomendasi Izin Magang</title>
+    <meta charset="UTF-8">
+    <title>Surat Rekomendasi Izin Magang</title>
     <style>
         body {
-            font-family: "Times New Roman", Times, sans-serif;
-            font-size: 14px;
+            font-family: 'Times New Roman', Times, serif;
             line-height: 1.6;
+            font-size: 14px;
         }
+
         .content {
-            margin: 0 40px;
+            margin: 20px 40px;
         }
-        .footer {
-            margin-top: 40px;
-        }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        .signature {
-            text-align: right;
-            margin-top: 40px;
-        }
-        .table-bordered, .table-bordered th, .table-bordered td {
+
+        .table-bordered td, .table-bordered th {
             border: 1px solid black;
             padding: 5px;
-            text-align: left;
         }
 
-        /* Header / KOP Styling */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-3 {
+            margin-top: 1.5rem;
+        }
+
+        .mt-5 {
+            margin-top: 3rem;
+        }
+
+        /* KOP SURAT Styling */
         .kop-container {
-            align-items: center; /* ensures vertical alignment */
+            display: flex;
+            align-items: center;
             justify-content: space-between;
             border-bottom: 3px solid black;
-            padding-bottom: 10px;
+            padding: 10px 40px 10px 40px;
             margin-bottom: 20px;
         }
 
         .kop-logo {
             width: 80px;
-            flex-shrink: 0;
         }
 
         .kop-logo img {
-            width: 180px;
+            width: 100%;
             height: auto;
             display: block;
         }
@@ -54,7 +61,7 @@
             flex-grow: 1;
         }
 
-        .kop-text h3, .kop-text h2, .kop-text p {
+        .kop-text h2, .kop-text h3, .kop-text p {
             margin: 0;
             line-height: 1.2;
         }
@@ -77,16 +84,18 @@
         <p>Email: kesbangpol@bukittinggikota.go.id</p>
     </div>
 
-    <!-- Logo Kanan -->
+    <!-- Logo Kanan (Kosong untuk keseimbangan) -->
     <div class="kop-logo"></div>
 </div>
 
 <!-- Konten Surat -->
 <div class="content">
-    <h3 style="text-align: center;">REKOMENDASI IZIN MAGANG</h3>
-    <p style="text-align: center;">Nomor : 000.9/ L.2.c/BKPol-BKT/2025</p>
+    <h3 class="text-center"><u>REKOMENDASI IZIN MAGANG</u></h3>
+    <p class="text-center">Nomor: {{ $pengajuan->nomor_surat }}</p>
 
-    <p>Membaca: Surat dari Fakultas Ilmu Sosial dan Ilmu Politik Universitas Andalas, Nomor B/2389/UN16.08.D/PK.01.06/2024, Tanggal 18 Desember 2024, Hal Permohonan Izin Kerja Magang.</p>
+    <p><strong>Membaca:</strong><br>
+        Surat dari {{ $pengajuan->surat_dari }}, Nomor {{ $pengajuan->nomor_surat }}, Tanggal {{ $pengajuan->tanggal_surat }}, Hal {{ $pengajuan->hal_surat }}.
+    </p>
 
     <p>Dengan ini memberikan rekomendasi kepada:</p>
 
@@ -101,7 +110,7 @@
         </thead>
         <tbody>
             <tr>
-                <td>1</td>
+                <td class="text-center">1</td>
                 <td>{{ $pengajuan->nama }}</td>
                 <td>{{ $pengajuan->nim }}</td>
                 <td>{{ $pengajuan->program_studi }}</td>
@@ -109,36 +118,36 @@
         </tbody>
     </table>
 
-    <p>Untuk: Melaksanakan Permohonan Izin Kerja Magang di Badan Kepegawaian dan Pengembangan Sumber Daya Manusia dari tanggal 06 Januari 2025 sampai dengan 31 Januari 2025.</p>
+    <p><strong>Untuk:</strong><br>
+        Melaksanakan {{ $pengajuan->hal_surat }} di {{ $pengajuan->instansi_tujuan }}
+    </p>
 
     <p>Dengan ketentuan sebagai berikut:</p>
     <ol>
         <li>Tidak boleh menyimpang dari kerangka tujuan Praktik;</li>
-        <li>Memberitahukan kedatangan serta maksud Praktik dan melaporkan diri sebelum meninggalkan tempat Praktik;</li>
+        <li>Memberitahukan keadaan serta maksud Praktik yang akan dilaksanakan dengan menunjukkan surat Rekomendasi Melaksanakan Praktik serta melaporkan diri sebelum meninggalkan tempat Praktik kepada Walikota Bukittinggi c.q Kepala Badan Kesatuan Bangsa dan Politik;</li>
         <li>Mematuhi semua peraturan yang berlaku dan menghormati adat istiadat masyarakat setempat;</li>
-        <li>Mengirimkan laporan hasil Praktik sebanyak 1 (satu) eksemplar paling lambat 1 (satu) bulan setelah Magang selesai;</li>
-        <li>Bila terjadi pelanggaran, maka Rekomendasi Melaksanakan Praktik ini akan dicabut;</li>
+        <li>Mengirimkan laporan hasil Praktik sebanyak 1 (satu) eksamplar kepada Walikota Bukittinggi cq. Kepala Badan Kesatuan Bangsa dan Politik paling lambat 1 (satu) bulan setelah Magang selesai;</li>
+        <li>Bila terjadi penyimpangan/pelanggaran terhadap ketentuan tersebut di atas, maka Rekomendasi Melaksanakan Praktik ini akan dicabut;</li>
         <li>Surat keterangan selesai magang dikeluarkan oleh tempat magang/praktik belajar lapangan.</li>
     </ol>
 
     <p>Demikian rekomendasi ini dibuat, untuk dipergunakan sebagaimana mestinya.</p>
 
-    <div class="signature">
-        <p>Bukittinggi, {{ $tanggalCetak }}<br>
-        a.n. Kepala Badan Kesatuan Bangsa dan Politik<br>
-        Kepala Bidang Kesatuan Bangsa,</p>
-        <br><br><br>
-        <p><strong>FITRIADI, S.Sos, M.M</strong><br>
-        Penata Tk. I - III/d<br>
-        NIP. 19810803 200501 1 006</p>
+    <div class="mt-5" style="text-align: right;">
+        Bukittinggi, {{ $pengajuan->tanggalCetak }}<br>
+        a. n. Kepala Badan Kesatuan Bangsa dan Politik<br>
+        Kepala Bidang Kesatuan Bangsa<br><br><br><br>
+
+        <strong>FITRIALDI, S.Sos, M.M</strong><br>
+        Penata Tk. I – III/d<br>
+        NIP. 198108032005011006
     </div>
 
-    <p>Tembusan:</p>
-    <ol>
-        <li>Wali Kota Bukittinggi (Sebagai Laporan);</li>
-        <li>Dekan Fakultas Ilmu Sosial dan Ilmu Politik;</li>
-        <li>Kepala Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Bukittinggi.</li>
-    </ol>
+    <div class="mt-3">
+        <strong>Tembusan:</strong><br>
+        1. Wali Kota Bukittinggi (Sebagai Laporan);
+    </div>
 </div>
 
 </body>

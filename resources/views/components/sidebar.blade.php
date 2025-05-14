@@ -36,7 +36,7 @@
                 </a>
                 <ul class="menu-sub">
                     <li
-                        class="menu-item {{ \Illuminate\Support\Facades\Route::is('transaction.incoming.*') || \Illuminate\Support\Facades\Route::is('transaction.disposition.*') ? 'active' : '' }}">
+                        class="menu-item {{ \Illuminate\Support\Facades\Route::is('transaction.incoming.') || \Illuminate\Support\Facades\Route::is('transaction.disposition.') ? 'active' : '' }}">
                         <a href="{{ route('transaction.incoming.index') }}" class="menu-link">
                             <div data-i18n="{{ __('menu.transaction.incoming_letter') }}">
                                 {{ __('menu.transaction.incoming_letter') }}</div>
@@ -77,6 +77,19 @@
             </li>
         @endif
 
+        <li class="menu-item {{ \Illuminate\Support\Facades\Route::is('home') ? 'active' : '' }}">
+            <a href="{{ route('home') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div data-i18n="{{ __('menu.home') }}">{{ __('menu.home') }}</div>
+            </a>
+        </li>
+        
+        <li class="menu-item {{ request()->is('/panduan') ? 'active' : '' }}">
+            <a href="{{ route('panduan.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-book-open"></i>
+                <div>Panduan</div>
+            </a>
+        </li>
 
         <!-- Menu Pengajuan -->
         <li class="menu-item {{ request()->routeIs('pengajuan.*') ? 'active open' : '' }}">
@@ -93,10 +106,9 @@
                     </li>
                     <li class="menu-item {{ request()->routeIs('admin.penelitian.*') ? 'active' : '' }}">
                         <a href="{{ route('admin.penelitian.index') }}" class="menu-link">
-                            <div>Surat Keterangan Penelitian</div>
+                            <div>Surat Rekomendasi Penelitian</div>
                         </a>
                     </li>
-                    
                 @else
                     <li class="menu-item {{ request()->routeIs('pengajuan.magang') ? 'active' : '' }}">
                         <a href="{{ route('pengajuan.magang') }}" class="menu-link">
@@ -108,14 +120,22 @@
                             <div>Surat Rekomendasi Penelitian</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->routeIs('user.pengajuan.index') ? 'active' : '' }}">
-                        <a href="{{ route('user.pengajuan.index') }}" class="menu-link">
-                            <div>Riwayat Pengajuan</div>
-                        </a>
-                    </li>
                 @endif
-
             </ul>
+        
+        
+        <li class="menu-item {{ request()->routeIs('user.pengajuan.index') ? 'active' : '' }}">
+            <a href="{{ route('user.pengajuan.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-history"></i>
+                <div>Status</div>
+            </a>
+        </li>
+
+       <li class="menu-item {{ request()->is('admin/tentang') ? 'active' : '' }}">
+            <a href="{{ route('admin.tentang.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-info-circle"></i>
+                <div>Tentang</div>
+            </a>
         </li>
 
 
