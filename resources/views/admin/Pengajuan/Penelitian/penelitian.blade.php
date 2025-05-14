@@ -14,7 +14,7 @@
 
             <div class="col-6 mb-3">
                 <label for="tempat_lahir">Tempat Lahir</label>
-                <input type="text" name="tanggal_lahir" class="form-control" required>
+                <input type="text" name="tempat_lahir" class="form-control" required>
             </div>
 
             <div class="col-6 mb-3">

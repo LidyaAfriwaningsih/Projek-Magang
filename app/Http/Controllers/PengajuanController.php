@@ -376,7 +376,7 @@ class PengajuanController extends Controller
         $templateProcessor->setValue('tanggal_surat', $tanggalSurat);
         $templateProcessor->setValue('hal_surat', $pengajuan->hal_surat);
         $templateProcessor->setValue('nama', $pengajuan->nama);
-        $templateProcessor->setValue('tempat', $pengajuan->tempat_lahir);
+        $templateProcessor->setValue('tempat_lahir', $pengajuan->tempat_lahir);
         $templateProcessor->setValue('tanggal_lahir', $tanggalLahir);
         $templateProcessor->setValue('pekerjaan', $pengajuan->pekerjaan);
         $templateProcessor->setValue('alamat', $pengajuan->alamat);
@@ -512,7 +512,5 @@ class PengajuanController extends Controller
             return redirect()->back()->with('error', 'Gagal menolak pengajuan: ' . $e->getMessage());
         }
     }
-
-
 
 }
