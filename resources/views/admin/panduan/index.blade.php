@@ -27,7 +27,7 @@
                 </div>
                 <img src="{{ asset('sneat/img/ditujukan-kepada.jpg') }}" class="d-block w-75 mx-auto" style="max-height: 600px; object-fit: contain;" alt="Panduan 1">
             </div>
-            <div class="carousel-item">a
+            <div class="carousel-item">
                 <div class="text-center mb-3 fw-bold text-black fs-4">
                     Alur Kerja Pengajuan Surat
                 </div>

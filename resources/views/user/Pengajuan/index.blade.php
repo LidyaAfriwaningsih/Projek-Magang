@@ -35,7 +35,7 @@
                                     @elseif($item->status == 'selesai')
                                         <span class="badge bg-success">Selesai</span>
                                     @else
-                                        <span class="badge bg-secondary">Tidak Diketahui</span>
+                                        <span class="badge bg-secondary">Ditolak</span>
                                     @endif
                                 </td>
                             </tr>

@@ -34,18 +34,20 @@
                                 <td>{{ $pengajuan->status ?? 'Belum Diproses' }}</td>
                                 <td>
                                     <a href="{{ route('admin.magang.show', $pengajuan->id) }}" class="btn btn-primary btn-sm">Lihat</a>
-                                    <form action="{{ route('admin.magang.proses', $pengajuan->id) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('admin.magang.proses', $pengajuan->id) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="btn btn-success btn-sm">Proses</button>
+                                        <button type="submit" class="btn btn-warning btn-sm">Proses</button>
                                     </form>
-                                    <a href="{{ route('admin.pengajuan.magang.cetak', $pengajuan->id) }}" class="btn btn-secondary btn-sm" target="_blank">
-                                        Cetak
-                                    </a>
-                                    <form action="{{ route('admin.magang.selesai', $pengajuan->id) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('admin.magang.tolak', $pengajuan->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-sm">Tolak</button>
+                                    </form>
+                                    <a href="{{ route('admin.pengajuan.magang.cetak', $pengajuan->id) }}" class="btn btn-secondary btn-sm" target="_blank">Cetak</a>
+                                    <form action="{{ route('admin.magang.selesai', $pengajuan->id) }}" method="POST">
                                         @csrf
                                         <button type="submit" class="btn btn-success btn-sm">Selesai</button>
                                     </form>
-                                    <form action="{{ route('admin.pengajuan.magang.hapus', $pengajuan->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengajuan ini?');">
+                                    <form action="{{ route('admin.pengajuan.magang.hapus', $pengajuan->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengajuan ini?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Hapus</button>

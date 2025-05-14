@@ -3,7 +3,7 @@
 @section('content')
     <h1 class="mb-4">Form Pengajuan Rekomendasi Magang</h1>
 
-    <form id="formPengajuan" action="{{ route('pengajuan.storeMagang') }}" method="POST" enctype="multipart/form-data">
+    <form id="formPengajuan" action="{{ route('pengajuan.magang') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div id="mahasiswa-wrapper">

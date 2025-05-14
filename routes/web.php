@@ -32,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('role:admin')->group(function () {
         Route::resource('user', UserController::class)->except(['show', 'edit', 'create']);
 
-        // ✅ Pengaturan Aplikasiaa
+        // ✅ Pengaturan Aplikasianya
         Route::get('settings', [PageController::class, 'settings'])->name('settings.show');
         Route::put('settings', [PageController::class, 'settingsUpdate'])->name('settings.update');
 
@@ -48,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/magang', [PengajuanController::class, 'indexMagang'])->name('magang.index');
             Route::get('/magang/{kelompok_id}', [PengajuanController::class, 'showMagang'])->name('magang.show');
             Route::post('/magang/{kelompok_id}/proses', [PengajuanController::class, 'prosesMagang'])->name('magang.proses');
+            Route::post('/magang/{kelompok_id}/tolak', [PengajuanController::class, 'tolakMagang'])->name('magang.tolak');
             Route::post('/magang/{kelompok_id}/selesai', [PengajuanController::class, 'selesaiMagang'])->name('magang.selesai');
             Route::get('/magang/cetak/{kelompok_id}', [PengajuanController::class, 'cetakMagang'])->name('pengajuan.magang.cetak');
             Route::delete('magang/{kelompok_id}/hapus', [PengajuanController::class, 'hapusMagang'])->name('pengajuan.magang.hapus');
@@ -57,6 +58,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/penelitian', [PengajuanController::class, 'indexPenelitian'])->name('penelitian.index');
             Route::get('/penelitian/{id}', [PengajuanController::class, 'showPenelitian'])->name('penelitian.show');
             Route::post('/penelitian/{id}/proses', [PengajuanController::class, 'prosesPenelitian'])->name('penelitian.proses');
+            Route::post('/penelitian/{kelompok_id}/tolak', [PengajuanController::class, 'tolakPenelitian'])->name('penelitian.tolak');
             Route::post('/penelitian/{id}/selesai', [PengajuanController::class, 'selesaiPenelitian'])->name('penelitian.selesai');
             Route::get('/penelitian/cetak/{id}', [PengajuanController::class, 'cetakPenelitian'])->name('pengajuan.penelitian.cetak');
             Route::delete('penelitian/{id}/hapus', [PengajuanController::class, 'hapusPenelitian'])->name('pengajuan.penelitian.hapus');
@@ -79,16 +81,18 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['auth'])->group(function () {
+        // Halaman Status - Hanya pengguna yang sudah login yang bisa mengaksesnya
         Route::get('/status', [PengajuanController::class, 'statusUser'])->name('user.pengajuan.index');
 
-        //panduan
+        // Panduan - Hanya untuk pengguna biasa, bukan admin
         Route::get('/panduan', function () {
             return view('admin.panduan.index');
-        })->name('panduan.index');
+        })->middleware('role:user')->name('panduan.index');
 
-        //tentang
-        Route::view('/admin/tentang', 'admin.tentang.index')->name('admin.tentang.index');
+        // Tentang - Hanya untuk pengguna biasa, bukan admin
+        Route::view('/admin/tentang', 'admin.tentang.index')->middleware('role:user')->name('admin.tentang.index');
     });
+
 
 
 

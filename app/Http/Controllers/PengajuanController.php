@@ -325,41 +325,78 @@ class PengajuanController extends Controller
     }    
      // ✅ ADMIN: Cetak surat pengajuan magang
      public function cetakMagang($id)
-     {
-         // Ambil data pengajuan dengan relasi ke user (misal: mahasiswa yang mengajukan)
-         $pengajuan = Pengajuan::with('user')->findOrFail($id);
-         $tanggalCetak = Carbon::now()->locale('id')->isoFormat('D MMMM Y');
+    {
+        $pengajuan = Pengajuan::findOrFail($id);
          
-         // Menggunakan PDF untuk mencetak surat pengajuan magang
-         $pdf = PDF::loadView('admin.pengajuan.magang.cetak', [
-            'pengajuan' => $pengajuan,
-            'tanggalCetak' => $tanggalCetak
-        ]);
-         
-         // Menyediakan file PDF untuk diunduh dengan nama yang sesuai
-         return $pdf->download('Pengajuan-Magang-'.$pengajuan->user->nama.'.pdf');
-         
-         // Versi PDF lain bisa disediakan, sesuaikan jika diperlukan
-         // $pdf = PDF::loadView('admin.pengajuan.magang.cetak', compact('pengajuan'));
-         // return $pdf->download('Surat_Pengajuan_Magang.pdf');
-     }
+        // Load template
+        $templatePath = storage_path('app/exports/template_izin_magang_kesbang.docx');
+        $templateProcessor = new TemplateProcessor($templatePath);
+
+        // Replace placeholder dengan data dinamis
+        $templateProcessor->setValue('nomor_surat', $pengajuan->nomor_surat);
+        $templateProcessor->setValue('surat_dari', $pengajuan->surat_dari);
+        $templateProcessor->setValue('tanggal_surat', Carbon::parse($pengajuan->tanggal_surat)->translatedFormat('d F Y'));
+        $templateProcessor->setValue('hal_surat', $pengajuan->hal_surat);
+        $templateProcessor->setValue('nama', $pengajuan->nama);
+        $templateProcessor->setValue('nim', $pengajuan->nim);
+        $templateProcessor->setValue('program_studi', $pengajuan->program_studi);
+        $templateProcessor->setValue('instansi_tujuan', $pengajuan->instansi_tujuan);
+        $templateProcessor->setValue('tanggalCetak', Carbon::now()->translatedFormat('d F Y'));
+
+        // Simpan hasil ke file sementara
+        $outputPath = storage_path("app/public/surat_magang_{$pengajuan->id}.docx");
+        $templateProcessor->saveAs($outputPath);
+
+        // Return sebagai response download
+        return response()->download($outputPath)->deleteFileAfterSend(true);
+    }
 
       // ✅ ADMIN: Cetak surat pengajuan penelitian
     public function cetakPenelitian($id)
     {
-        // Ambil data pengajuan dengan relasi ke user (misal: mahasiswa yang mengajukan)
-        $pengajuan = Pengajuan::with('user')->findOrFail($id);
-        
-        // Menggunakan PDF untuk mencetak surat pengajuan magang
-        $pdf = PDF::loadView('admin.pengajuan.penelitian.cetak', compact('pengajuan'));
-        
-        // Menyediakan file PDF untuk diunduh dengan nama yang sesuai
-        return $pdf->download('Pengajuan-Penelitian-'.$pengajuan->user->nama.'.pdf');
-        
-        // Versi PDF lain bisa disediakan, sesuaikan jika diperlukan
-        // $pdf = PDF::loadView('admin.pengajuan.magang.cetak', compact('pengajuan'));
-        // return $pdf->download('Surat_Pengajuan_Magang.pdf');
+        // Ambil data pengajuan
+        $pengajuan = Pengajuan::findOrFail($id);
+
+        // Tentukan path template
+        $templatePath = storage_path('app/exports/surat_izin_penelitian.docx');
+
+        // Inisialisasi TemplateProcessor
+        $templateProcessor = new TemplateProcessor($templatePath);
+
+        // Format tanggal lahir dan tanggal surat
+        $tanggalLahir = Carbon::parse($pengajuan->tanggal_lahir)->translatedFormat('d F Y');
+        $tanggalSurat = Carbon::parse($pengajuan->tanggal_surat)->translatedFormat('d F Y');
+        $tanggalMulai = Carbon::parse($pengajuan->tanggal_mulai)->translatedFormat('d F Y');
+        $tanggalSelesai = Carbon::parse($pengajuan->tanggal_selesai)->translatedFormat('d F Y');
+        $tanggalCetak = Carbon::now()->translatedFormat('d F Y');
+
+        // Isi template dengan data dari pengajuan
+        $templateProcessor->setValue('nomor_surat', $pengajuan->nomor_surat);
+        $templateProcessor->setValue('surat_dari', $pengajuan->surat_dari);
+        $templateProcessor->setValue('tanggal_surat', $tanggalSurat);
+        $templateProcessor->setValue('hal_surat', $pengajuan->hal_surat);
+        $templateProcessor->setValue('nama', $pengajuan->nama);
+        $templateProcessor->setValue('tempat', $pengajuan->tempat_lahir);
+        $templateProcessor->setValue('tanggal_lahir', $tanggalLahir);
+        $templateProcessor->setValue('pekerjaan', $pengajuan->pekerjaan);
+        $templateProcessor->setValue('alamat', $pengajuan->alamat);
+        $templateProcessor->setValue('nomor_identitas', $pengajuan->nomor_identitas);
+        $templateProcessor->setValue('judul_penelitian', $pengajuan->judul_penelitian);
+        $templateProcessor->setValue('tanggal_mulai', $tanggalMulai);
+        $templateProcessor->setValue('tanggal_selesai', $tanggalSelesai);
+        $templateProcessor->setValue('instansi_tujuan', $pengajuan->instansi_tujuan);
+        $templateProcessor->setValue('tanggalCetak', $tanggalCetak);
+
+        // Tentukan path untuk menyimpan file sementara
+        $outputPath = storage_path("app/public/surat_penelitian_{$pengajuan->id}.docx");
+
+        // Simpan hasil ke file sementara
+        $templateProcessor->saveAs($outputPath);
+
+        // Kembalikan file sebagai response download dan hapus setelah dikirim
+        return response()->download($outputPath)->deleteFileAfterSend(true);
     }
+
 
     public function hapusMagang($id)
     {
@@ -437,5 +474,45 @@ class PengajuanController extends Controller
 
         return view('user.Pengajuan.index', compact('pengajuan'));
     }
+
+    public function tolakMagang($id)
+    {
+        try {
+            $affected = Pengajuan::where('id', $id)
+                ->update(['status' => 'ditolak']);
+
+            if ($affected > 0) {
+                return redirect()->route('admin.magang.index')
+                    ->with('success', 'Pengajuan magang telah ditolak');
+            }
+
+            return redirect()->back()
+                ->with('error', 'Tidak ada data pengajuan yang ditemukan');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menolak pengajuan: ' . $e->getMessage());
+        }
+    }
+
+    public function tolakPenelitian($id)
+    {
+        try {
+            $affected = Pengajuan::where('id', $id)
+                ->update(['status' => 'ditolak']);
+
+            if ($affected > 0) {
+                return redirect()->route('admin.penelitian.index')
+                    ->with('success', 'Pengajuan magang telah ditolak');
+            }
+
+            return redirect()->back()
+                ->with('error', 'Tidak ada data pengajuan yang ditemukan');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menolak pengajuan: ' . $e->getMessage());
+        }
+    }
+
+
 
 }

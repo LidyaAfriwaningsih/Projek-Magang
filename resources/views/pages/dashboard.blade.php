@@ -153,10 +153,10 @@
                                 <img src="{{ asset('sneat/img/bukittinggi.jpg') }}" class="d-block w-100" style="max-height: 400px; object-fit: cover;" alt="Gambar 1">
                             </div>
                             <div class="carousel-item">
-                                <img src="{{ asset('sneat/img/cute.jpeg') }}" class="d-block w-100" style="max-height: 400px; object-fit: cover;" alt="Gambar 2">
+                                <img src="{{ asset('sneat/img/kesbangpol1.jpg') }}" class="d-block w-100" style="max-height: 400px; object-fit: cover;" alt="Gambar 2">
                             </div>
                             <div class="carousel-item">
-                                <img src="{{ asset('sneat/img/cat.jpeg') }}" class="d-block w-100" style="max-height: 400px; object-fit: cover;" alt="Gambar 3">
+                                <img src="{{ asset('sneat/img/kesbangpol2.jpg') }}" class="d-block w-100" style="max-height: 400px; object-fit: cover;" alt="Gambar 3">
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">

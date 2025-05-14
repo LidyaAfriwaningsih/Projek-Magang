@@ -33,7 +33,7 @@
 
                                 <form action="{{ route('admin.penelitian.proses', $pengajuan->id) }}" method="POST" style="display:inline;">
                                     @csrf
-                                    <button type="submit" class="btn btn-success btn-sm">Proses</button>
+                                    <button type="submit" class="btn btn-warning btn-sm">Proses</button>
                                 </form>
                                 <form action="{{ route('admin.penelitian.selesai', $pengajuan->id) }}" method="POST" style="display:inline;">
                                     @csrf
