@@ -31,23 +31,24 @@
                             <td>
                                 <a href="{{ route('admin.penelitian.show', $pengajuan->id) }}" class="btn btn-primary btn-sm">Lihat</a>
 
-                                <form action="{{ route('admin.penelitian.proses', $pengajuan->id) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('admin.penelitian.proses', $pengajuan->id) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="btn btn-warning btn-sm">Proses</button>
                                 </form>
-                                <form action="{{ route('admin.penelitian.selesai', $pengajuan->id) }}" method="POST" style="display:inline;">
+
+                                <form action="{{ route('admin.penelitian.selesai', $pengajuan->id) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="btn btn-success btn-sm">Selesai</button>
                                 </form>
-                                <!-- Link untuk cetak pengajuan magang -->
-                                <a href="{{ route('admin.pengajuan.penelitian.cetak', $pengajuan->id) }}" class="btn btn-secondary btn-sm" target="_blank">
-                                    Cetak
-                                </a>
-                                <form action="{{ route('admin.pengajuan.penelitian.hapus', $pengajuan->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengajuan ini?');">
+
+                                <a href="{{ route('admin.pengajuan.penelitian.cetak', $pengajuan->id) }}" class="btn btn-secondary btn-sm" target="_blank">Cetak</a>
+
+                                <form action="{{ route('admin.pengajuan.penelitian.hapus', $pengajuan->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengajuan ini?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                 </form>
+
                             </td>
                         </tr>
                     @endforeach
