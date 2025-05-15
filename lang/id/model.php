@@ -9,7 +9,7 @@ return [
         'letter_date' => 'Tanggal Surat',
         'received_date' => 'Tanggal Diterima',
         'description' => 'Ringkasan',
-        'note' => 'Keterangan',
+        'note' => 'Status Surat',
         'attachment' => 'Lampiran',
         'classification_code' => 'Kode Klasifikasi',
     ],

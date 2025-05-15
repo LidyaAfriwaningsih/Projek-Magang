@@ -6,7 +6,7 @@
     </x-breadcrumb>
 
     <div class="card mb-4">
-        <form action="{{ route('transaction.incoming.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('transaction.incoming.store') }}" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
             @csrf
             <div class="card-body row">
                 <input type="hidden" name="type" value="incoming">
@@ -20,10 +20,10 @@
                     <x-input-form name="agenda_number" :label="__('model.letter.agenda_number')"/>
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-6">
-                    <x-input-form name="letter_date" :label="__('model.letter.letter_date')" type="date"/>
+                    <x-input-form name="letter_date" id="letter_date" :label="__('model.letter.letter_date')" type="date"/>
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-6">
-                    <x-input-form name="received_date" :label="__('model.letter.received_date')" type="date"/>
+                    <x-input-form name="received_date" id="received_date" :label="__('model.letter.received_date')" type="date"/>
                 </div>
                 <div class="col-sm-12 col-12 col-md-12 col-lg-12">
                     <x-input-textarea-form name="description" :label="__('model.letter.description')"/>
@@ -44,7 +44,19 @@
                     </div>
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-4">
-                    <x-input-form name="note" :label="__('model.letter.note')"/>
+                    <div class="mb-3">
+                        <label for="note" class="form-label">{{ __('model.letter.note') }}</label>
+                        <select class="form-select @error('note') is-invalid @enderror" id="note" name="note">
+                            @foreach ($status as $item)
+                                <option value="{{ $item->status }}" @selected(old('note', $data->note ?? '') == $item->status)>
+                                    {{ $item->status }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('note')
+                            <span class="error invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-4">
                     <div class="mb-3">
@@ -60,4 +72,28 @@
             </div>
         </form>
     </div>
+@endsection
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function validateForm() {
+        const tanggalSurat = document.getElementById('letter_date').value;
+        const tanggalTerima = document.getElementById('received_date').value;
+
+        if (tanggalSurat && tanggalTerima) {
+            const tSurat = new Date(tanggalSurat);
+            const tTerima = new Date(tanggalTerima);
+
+            if (tTerima < tSurat) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Tanggal Tidak Valid',
+                    text: 'Tanggal Terima Surat tidak boleh lebih dulu dari Tanggal Surat.',
+                });
+                return false;
+            }
+        }
+        return true;
+    }
+</script>
 @endsection

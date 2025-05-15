@@ -9,6 +9,7 @@ use App\Models\Attachment;
 use App\Models\Classification;
 use App\Models\Config;
 use App\Models\Letter;
+use App\Models\LetterStatus; 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -75,8 +76,11 @@ class OutgoingLetterController extends Controller
      */
     public function create(): View
     {
+        $status = LetterStatus::all();
+
         return view('pages.transaction.outgoing.create', [
             'classifications' => Classification::all(),
+            'status' => $status,
         ]);
     }
 
@@ -139,9 +143,12 @@ class OutgoingLetterController extends Controller
      */
     public function edit(Letter $outgoing): View
     {
+        $status = LetterStatus::all();
+
         return view('pages.transaction.outgoing.edit', [
             'data' => $outgoing,
             'classifications' => Classification::all(),
+            'status' => $status,
         ]);
     }
 

@@ -36,13 +36,14 @@
                     <div data-i18n="{{ __('menu.transaction.menu') }}">{{ __('menu.transaction.menu') }}</div>
                 </a>
                 <ul class="menu-sub">
-                    <li class="menu-item {{ Route::is('transaction.incoming.') || Route::is('transaction.disposition.') ? 'active' : '' }}">
+                    <li class="menu-item {{ Route::is('transaction.incoming.*') || Route::is('transaction.disposition.*') ? 'active' : '' }}">
                         <a href="{{ route('transaction.incoming.index') }}" class="menu-link">
                             <div data-i18n="{{ __('menu.transaction.incoming_letter') }}">
                                 {{ __('menu.transaction.incoming_letter') }}
                             </div>
                         </a>
                     </li>
+
                     <li class="menu-item {{ Route::is('transaction.outgoing.*') ? 'active' : '' }}">
                         <a href="{{ route('transaction.outgoing.index') }}" class="menu-link">
                             <div data-i18n="{{ __('menu.transaction.outgoing_letter') }}">

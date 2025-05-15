@@ -51,7 +51,20 @@
                     </div>
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-4">
-                    <x-input-form :value="$data->note ?? ''" name="note" :label="__('model.letter.note')"/>
+                    <div class="mb-3">
+                        <label for="note" class="form-label">{{ __('model.letter.note') }}</label>
+                        <select class="form-select @error('note') is-invalid @enderror" id="note" name="note">
+                            @foreach($status as $item)
+                                <option
+                                    @selected(old('note', $data->note ?? '') == $item->status)
+                                    value="{{ $item->status }}"
+                                >{{ $item->status }}</option>
+                            @endforeach
+                        </select>
+                        @error('note')
+                            <span class="error invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-4">
                     <div class="mb-3">

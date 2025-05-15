@@ -125,6 +125,80 @@
 
     // Konfirmasi sebelum submit
     function konfirmasiKirim() {
+        const form = document.getElementById('formPengajuan');
+        let valid = true;
+        let message = '';
+
+        const mahasiswaGroups = document.querySelectorAll('.mahasiswa-group');
+        mahasiswaGroups.forEach((group, index) => {
+            const nama = group.querySelector('input[name="nama[]"]');
+            const nim = group.querySelector('input[name="nim[]"]');
+            const prodi = group.querySelector('input[name="program_studi[]"]');
+
+            if (!nama.value.trim() || !nim.value.trim() || !prodi.value.trim()) {
+                valid = false;
+                message = `Data mahasiswa belum lengkap.`;
+            }
+        });
+
+        // Cek kolom wajib lainnya
+        const instansi = document.querySelector('input[name="instansi_tujuan"]');
+        const suratDari = document.querySelector('input[name="surat_dari"]');
+        const nomorSurat = document.querySelector('input[name="nomor_surat"]');
+        const halSurat = document.querySelector('input[name="hal_surat"]');
+        const tanggalSurat = document.querySelector('input[name="tanggal_surat"]');
+        const tanggalMulai = document.querySelector('input[name="tanggal_mulai"]');
+        const tanggalSelesai = document.querySelector('input[name="tanggal_selesai"]');
+
+        if (valid && !instansi.value.trim()) {
+            valid = false;
+            message = 'Instansi Tujuan wajib diisi.';
+        } else if (valid && !suratDari.value.trim()) {
+            valid = false;
+            message = 'Surat Dari wajib diisi.';
+        } else if (valid && !nomorSurat.value.trim()) {
+            valid = false;
+            message = 'Nomor Surat wajib diisi.';
+        } else if (valid && !halSurat.value.trim()) {
+            valid = false;
+            message = 'Hal Surat wajib diisi.';
+        } else if (valid && !tanggalSurat.value) {
+            valid = false;
+            message = 'Tanggal Surat wajib diisi.';
+        } else if (valid && (!tanggalMulai.value || !tanggalSelesai.value)) {
+            valid = false;
+            message = 'Tanggal Magang (mulai dan selesai) wajib diisi.';
+        } else if (valid) {
+            // Validasi tanggal logis
+            const mulaiDate = new Date(tanggalMulai.value);
+            const selesaiDate = new Date(tanggalSelesai.value);
+            if (selesaiDate < mulaiDate) {
+                valid = false;
+                message = 'Tanggal selesai magang tidak boleh lebih awal dari tanggal mulai.';
+            }
+        }
+
+        // Cek file upload
+        const fileKTP = document.getElementById('file_ktp');
+        const fileSurat = document.getElementById('file_surat_dari');
+        if (!fileKTP.files.length) {
+            valid = false;
+            message = 'File KTP wajib diunggah.';
+        } else if (!fileSurat.files.length) {
+            valid = false;
+            message = 'File Surat Pengantar wajib diunggah.';
+        }
+
+        if (!valid) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Form Belum Lengkap',
+                text: message,
+            });
+            return;
+        }
+
+        // Jika semua valid, tampilkan konfirmasi
         Swal.fire({
             title: 'Yakin kirim pengajuan?',
             text: "Pastikan data sudah benar.",
@@ -135,30 +209,14 @@
             confirmButtonText: 'Ya, kirim!'
         }).then((result) => {
             if (result.isConfirmed) {
-                document.getElementById('formPengajuan').submit();
+                form.submit();
             }
         });
     }
-
     // Update nama file yang dipilih
-    function updateLabel(input) {
-        const labelId = input.id + '_name';
-        const fileName = input.files.length > 0 ? input.files[0].name : 'Belum ada file';
-        document.getElementById(labelId).innerText = fileName;
-    }
-
-    // Tampilkan notifikasi dari session
-    @if (session('success'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil',
-            text: '{{ session('success') }}',
-        });
-    @elseif (session('error'))
-        Swal.fire({
-            icon: 'error',
-            title: 'Gagal',
-            text: '{{ session('error') }}',
-        });
-    @endif
+        function updateLabel(input) {
+            const labelId = input.id + '_name';
+            const fileName = input.files.length > 0 ? input.files[0].name : 'Belum ada file';
+            document.getElementById(labelId).innerText = fileName;
+        }
 </script>

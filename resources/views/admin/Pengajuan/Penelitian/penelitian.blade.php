@@ -133,6 +133,102 @@
 
     // Konfirmasi sebelum submit
     function konfirmasiKirim() {
+        const form = document.getElementById('formPengajuan');
+        let valid = true;
+        let message = '';
+
+        // ambil semua input yang diperlukan
+        const nama = form.querySelector('[name="nama"]');
+    const tempatLahir = form.querySelector('[name="tempat_lahir"]');
+    const tanggalLahir = form.querySelector('[name="tanggal_lahir"]');
+    const pekerjaan = form.querySelector('[name="pekerjaan"]');
+    const alamat = form.querySelector('[name="alamat"]');
+    const nomorIdentitas = form.querySelector('[name="nomor_identitas"]');
+    const judulPenelitian = form.querySelector('[name="judul_penelitian"]');
+    const instansiTujuan = form.querySelector('[name="instansi_tujuan"]');
+    const suratDari = form.querySelector('[name="surat_dari"]');
+    const nomorSurat = form.querySelector('[name="nomor_surat"]');
+    const halSurat = form.querySelector('[name="hal_surat"]');
+    const tanggalSurat = form.querySelector('[name="tanggal_surat"]');
+    const tanggalMulai = form.querySelector('[name="tanggal_mulai"]');
+    const tanggalSelesai = form.querySelector('[name="tanggal_selesai"]');
+    const fileKTP = form.querySelector('#file_ktp');
+    const fileSurat = form.querySelector('#file_surat_dari');
+
+        // Validasi kolom wajib
+        if (!nama.value.trim()) {
+            valid = false;
+            message = 'Nama wajib diisi.';
+        } else if (!tempatLahir.value.trim()) {
+            valid = false;
+            message = 'Tempat Lahir wajib diisi.';
+        } else if (!tanggalLahir.value) {
+            valid = false;
+            message = 'Tanggal Lahir wajib diisi.';
+        } else if (!pekerjaan.value.trim()) {
+            valid = false;
+            message = 'Pekerjaan wajib diisi.';
+        } else if (!alamat.value.trim()) {
+            valid = false;
+            message = 'Alamat wajib diisi.';
+        } else if (!nomorIdentitas.value.trim()) {
+            valid = false;
+            message = 'Nomor Identitas (KTP) wajib diisi.';
+        }else if (!/^\d+$/.test(nomorIdentitas.value.trim())) {
+            valid = false;
+            message = 'Nomor Identitas (KTP) hanya boleh terdiri dari angka.';
+        } else if (nomorIdentitas.value.trim().length !== 16) {
+            valid = false;
+            message = 'Nomor Identitas (KTP) harus  16 digit.';
+        } else if (!judulPenelitian.value.trim()) {
+            valid = false;
+            message = 'Judul Penelitian wajib diisi.';
+        } else if (!instansiTujuan.value.trim()) {
+            valid = false;
+            message = 'Instansi Tujuan wajib diisi.';
+        } else if (!suratDari.value.trim()) {
+            valid = false;
+            message = 'Surat Dari wajib diisi.';
+        } else if (!nomorSurat.value.trim()) {
+            valid = false;
+            message = 'Nomor Surat wajib diisi.';
+        } else if (!halSurat.value.trim()) {
+            valid = false;
+            message = 'Hal Surat wajib diisi.';
+        } else if (!tanggalSurat.value) {
+            valid = false;
+            message = 'Tanggal Surat wajib diisi.';
+        } else if (!tanggalMulai.value || !tanggalSelesai.value) {
+            valid = false;
+            message = 'Tanggal Penelitian (mulai dan selesai) wajib diisi.';
+        } else {
+            const mulai = new Date(tanggalMulai.value);
+            const selesai = new Date(tanggalSelesai.value);
+            if (selesai < mulai) {
+                valid = false;
+                message = 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai.';
+            }
+        }
+
+        // Validasi file
+        if (valid && !fileKTP.files.length) {
+            valid = false;
+            message = 'File KTP wajib diunggah.';
+        } else if (valid && !fileSurat.files.length) {
+            valid = false;
+            message = 'File Surat Pengantar wajib diunggah.';
+        }
+        // Jika tidak valid, tampilkan pesan
+        if (!valid) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Form Belum Lengkap',
+                text: message,
+            });
+            return;
+        }
+
+        // Jika valid, tampilkan konfirmasi
         Swal.fire({
             title: 'Yakin kirim pengajuan?',
             text: "Pastikan data sudah benar.",
@@ -143,30 +239,14 @@
             confirmButtonText: 'Ya, kirim!'
         }).then((result) => {
             if (result.isConfirmed) {
-                document.getElementById('formPengajuan').submit();
+                form.submit();
             }
         });
     }
-
     // Update nama file yang dipilih
-    function updateLabel(input) {
-        const labelId = input.id + '_name';
-        const fileName = input.files.length > 0 ? input.files[0].name : 'Belum ada file';
-        document.getElementById(labelId).innerText = fileName;
-    }
-
-    // Tampilkan notifikasi dari session
-    @if (session('success'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil',
-            text: '{{ session('success') }}',
-        });
-    @elseif (session('error'))
-        Swal.fire({
-            icon: 'error',
-            title: 'Gagal',
-            text: '{{ session('error') }}',
-        });
-    @endif
+        function updateLabel(input) {
+            const labelId = input.id + '_name';
+            const fileName = input.files.length > 0 ? input.files[0].name : 'Belum ada file';
+            document.getElementById(labelId).innerText = fileName;
+        }
 </script>
