@@ -3,7 +3,7 @@
 
 ## Laravel Surat Menyurat v1
 
-Web app untuk mengelola surat masuk, keluar, serta disposisinya.
+Web app untuk mengelola surat masuk, keluar dan pengajuan (izin penelitian dan rekomendasi magang)
 
 ## Features / Fitur
 
@@ -12,12 +12,12 @@ Web app untuk mengelola surat masuk, keluar, serta disposisinya.
 - Menu Beranda
   - Data jumlah surat masuk hari ini
   - Data jumlah surat keluar hari ini
-  - Data jumlah surat disposisi hari ini
+  - Data jumlah pengajuan hari ini
   - Data jumlah transaksi surat hari ini
   - Data jumlah pengguna aktif
   - Data persentase kenaikan/penurunan surat masuk hari ini
   - Data persentase kenaikan/penurunan surat keluar hari ini
-  - Data persentase kenaikan/penurunan surat disposisi hari ini
+  - Data persentase kenaikan/penurunan pengajuan hari ini
   - Data persentase kenaikan/penurunan transaksi surat hari ini
 - Menu Transaksi Surat Masuk
   - Menambahkan surat masuk
@@ -46,11 +46,14 @@ Web app untuk mengelola surat masuk, keluar, serta disposisinya.
   - Pencarian surat keluar berdasarkan tanggal dibuat
   - Pencarian surat keluar berdasarkan tanggal surat
   - Mencetak agenda surat keluar berdasarkan pencarian
-- Menu Galeri Surat Masuk
-  - Menampilkan semua lampiran surat masuk
-  - Mengunduh lampiran surat masuk
-- Menu Galeri Surat Keluar
-  - Menampilkan semua lampiran surat keluar
+- Menu Pengajuan (admin)
+  - Menampilkan semua pengajuan surat rekomendasi magang dan penelitian user
+  - Memproses pengajuan surat rekomendasi magang dan penelitian user
+  - menghapus pengajuan surat rekomendasi magang dan penelitian user
+  - mencetak surat rekomendasi magang dan penelitian user
+- Menu Pengajuan (user)
+  - Melakukan pengajuan surat rekomendasi magang dan penelitian
+  - Melihat status pengajuan
   - Mengunduh lampiran surat keluar
 - Menu Referensi Klasifikasi Surat
   - Menambahkan klasifikasi surat
