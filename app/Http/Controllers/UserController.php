@@ -132,6 +132,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:15',
             'password' => 'nullable|string|min:6|confirmed',
+            'is_active' => 'sometimes|boolean', 
         ]);
 
         $user->update([

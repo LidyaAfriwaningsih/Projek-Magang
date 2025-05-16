@@ -35,9 +35,9 @@
                 </thead>
                 @if($data)
                     <tbody>
-                    @foreach($data as $status)
+                    @foreach($data as $index => $status)
                         <tr>
-                            <td>{{ $status->id }}</td>
+                            <td>{{ $index + 1 }}</td>  <!-- Ini yang bikin nomor urut mulai 1 -->
                             <td>{{ $status->status }}</td>
                             <td>
                                 <button class="btn btn-info btn-sm btn-edit"

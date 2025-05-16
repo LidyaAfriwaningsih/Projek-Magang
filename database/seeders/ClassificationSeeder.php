@@ -26,8 +26,13 @@ class ClassificationSeeder extends Seeder
 
         // Data classifications yang akan disisipkan
         $classifications = [
-            ['code' => 'ADM', 'type' => 'Administrasi', 'description' => 'Jenis surat yang berkaitan dengan administrasi'],
-            ['code' => 'HRD', 'type' => 'Sumber Daya Manusia', 'description' => 'Surat terkait kepegawaian dan SDM'],
+            ['code' => '000', 'type' => 'Umum', 'description' => 'Surat menyurat umum, administrasi perkantoran, dan hubungan antarinstansi.'],
+            ['code' => '100', 'type' => 'Pemerintahan', 'description' => 'Urusan pemerintahan umum, otonomi daerah, kebijakan publik, dan penyelenggaraan pemerintahan.'],
+            ['code' => '200', 'type' => 'Politik Dalam Negeri', 'description' => 'Kegiatan partai politik, organisasi kemasyarakatan, kehidupan demokrasi, dan pendidikan politik.'],
+            ['code' => '300', 'type' => 'Keamanan dan Ketertiban', 'description' => 'Pengawasan stabilitas keamanan, ketertiban umum, deteksi dini, dan penanganan konflik sosial.'],
+            ['code' => '400', 'type' => 'Kesejahteraan Sosial', 'description' => 'Pembinaan organisasi kemasyarakatan, keagamaan, sosial budaya, serta pemberdayaan masyarakat.'],
+            ['code' => '800', 'type' => 'Kepegawaian', 'description' => 'Pengelolaan SDM, termasuk pengangkatan, mutasi, cuti, dan pensiun pegawai.'],
+            ['code' => '900', 'type' => 'Keuangan', 'description' => 'Pengelolaan anggaran, laporan keuangan, administrasi keuangan, dan pengadaan.'],
         ];
 
         // Masukkan data dengan update jika sudah ada

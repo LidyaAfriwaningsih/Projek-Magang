@@ -11,7 +11,7 @@ return [
         'description' => 'Ringkasan',
         'note' => 'Status Surat',
         'attachment' => 'Lampiran',
-        'classification_code' => 'Kode Klasifikasi',
+        'classification_code' => 'Klasifikasi',
     ],
     'classification' => [
         'code' => 'Kode',

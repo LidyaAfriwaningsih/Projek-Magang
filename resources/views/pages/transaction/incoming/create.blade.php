@@ -20,10 +20,10 @@
                     <x-input-form name="agenda_number" :label="__('model.letter.agenda_number')"/>
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-6">
-                    <x-input-form name="letter_date" id="letter_date" :label="__('model.letter.letter_date')" type="date"/>
+                    <x-input-form name="letter_date" :label="__('model.letter.letter_date')" type="date" id="letter_date"/>
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-6">
-                    <x-input-form name="received_date" id="received_date" :label="__('model.letter.received_date')" type="date"/>
+                    <x-input-form name="received_date" :label="__('model.letter.received_date')" type="date" id="received_date"/>
                 </div>
                 <div class="col-sm-12 col-12 col-md-12 col-lg-12">
                     <x-input-textarea-form name="description" :label="__('model.letter.description')"/>
@@ -74,7 +74,9 @@
     </div>
 @endsection
 @section('scripts')
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     function validateForm() {
         const tanggalSurat = document.getElementById('letter_date').value;
@@ -96,4 +98,5 @@
         return true;
     }
 </script>
+
 @endsection

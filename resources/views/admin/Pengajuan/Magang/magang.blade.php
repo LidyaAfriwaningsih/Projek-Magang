@@ -214,9 +214,9 @@
         });
     }
     // Update nama file yang dipilih
-        function updateLabel(input) {
-            const labelId = input.id + '_name';
-            const fileName = input.files.length > 0 ? input.files[0].name : 'Belum ada file';
-            document.getElementById(labelId).innerText = fileName;
-        }
+    function updateLabel(input) {
+        const labelId = input.id + '_name';
+        const fileName = input.files.length > 0 ? input.files[0].name : 'Belum ada file';
+        document.getElementById(labelId).innerText = fileName;
+    }
 </script>

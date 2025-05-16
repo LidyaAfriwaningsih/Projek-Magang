@@ -121,7 +121,7 @@ class PengajuanController extends Controller
         $request->validate([
             'nama.*' => 'required|string|max:255',
             'nim.*' => 'required|string|max:16|regex:/^[0-9]+$/',
-            'nomor_identitas.*' => 'required|string|max:16|regex:/^[0-9]+$/',
+            'nomor_identitas.*' => 'required|array|max:16|regex:/^[0-9]+$/',
             'Pekerjaan.*' => 'required|string|max:50',
             'alamat.*' => 'required|string|max:255',
             'tempat_lahir.*' => 'required|string|max:50',
@@ -144,7 +144,7 @@ class PengajuanController extends Controller
             'alamat.*.required' => 'Alamat harus diisi',
             'tempat_lahir.*.required' => 'Tempat lahir harus diisi',
             'tanggal_lahir.*.required' => 'Tanggal lahir harus diisi',
-            'instansi_tujuan.required' => 'Instansi tujuan penelitian harus diisi',
+            'instansi_tujuan.*.required' => 'Instansi tujuan penelitian harus diisi',
             'judul_penelitian.*.required' => 'Judul penelitian harus diisi',
             'surat_dari.*.required' => 'Surat dari harus diisi',
             'nomor_surat.*.required' => 'Nomor surat harus diisi',
@@ -182,7 +182,7 @@ class PengajuanController extends Controller
                 'nomor_surat' => $request->nomor_surat,
                 'nomor_identitas' => $request->nomor_identitas,
                 'judul_penelitian' => $request->judul_penelitian,
-                'instansi_tujuan' => $request->instansi_tujuan,
+                'instansi_tujuan' => implode(', ', $request->instansi_tujuan),
                 'user_id' => auth()->id(),
                 'status' => 'diajukan',
                 'file_ktp' => $fileKtpPath,
@@ -369,6 +369,19 @@ class PengajuanController extends Controller
         $tanggalMulai = Carbon::parse($pengajuan->tanggal_mulai)->translatedFormat('d F Y');
         $tanggalSelesai = Carbon::parse($pengajuan->tanggal_selesai)->translatedFormat('d F Y');
         $tanggalCetak = Carbon::now()->translatedFormat('d F Y');
+
+        // Format instansi_tujuan jika disimpan sebagai JSON
+        $instansiTujuan = is_array($pengajuan->instansi_tujuan)
+            ? $pengajuan->instansi_tujuan
+            : json_decode($pengajuan->instansi_tujuan, true);
+
+        $instansiTujuan = $instansiTujuan ?? [];
+
+        // Format menjadi list numerik
+        $instansiText = '';
+        foreach ($instansiTujuan as $i => $instansi) {
+            $instansiText .= ($i + 1) . '. ' . $instansi . "\n";
+        }
 
         // Isi template dengan data dari pengajuan
         $templateProcessor->setValue('nomor_surat', $pengajuan->nomor_surat);

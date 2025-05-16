@@ -55,7 +55,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="mb-4">
                 <div class="card">
                     <div class="card-body">
@@ -111,22 +110,22 @@
                 </div>
                 <div class="col-lg-6 col-md-12 col-6 mb-4">
                     <x-dashboard-card-simple
-                        :label="__('dashboard.active_user')"
-                        :value="$activeUser"
-                        :daily="false"
-                        color="info"
-                        icon="bx-user-check"
-                        :percentage="0"
-                    />
-                </div>
-                <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <x-dashboard-card-simple
                         label="Pengajuan"
                         :value="$todayPengajuan"
                         :daily="true"
                         color="warning"
                         icon="bx-file"
                         :percentage="$percentagePengajuan"
+                    />
+                </div>
+                <div class="col-lg-6 col-md-12 col-6 mb-4">
+                    <x-dashboard-card-simple
+                        :label="__('dashboard.active_user')"
+                        :value="$activeUser"
+                        :daily="false"
+                        color="info"
+                        icon="bx-user-check"
+                        :percentage="0"
                     />
                 </div>
             </div>

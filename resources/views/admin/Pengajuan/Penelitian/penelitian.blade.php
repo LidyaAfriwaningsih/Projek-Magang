@@ -42,10 +42,17 @@
                 <input type="text" name="judul_penelitian" class="form-control" required>
             </div>
 
-            <div class="col-6 mb-3">
+            <div class="col-12 mb-3">
                 <label for="instansi_tujuan">Instansi Tujuan</label>
-                <input type="text" name="instansi_tujuan" class="form-control" required>
+                <div id="instansiContainer">
+                    <div class="input-group mb-2">
+                        <input type="text" name="instansi_tujuan[]" class="form-control" required>
+                        <button type="button" class="btn btn-danger" onclick="hapusInstansi(this)">Hapus</button>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="tambahInstansi()">+ Tambah Instansi</button>
             </div>
+
 
             <div class="col-6 mb-3">
                 <label for="surat_dari">Surat Dari</label>
@@ -103,57 +110,48 @@
 
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-// Tambah dan hapus data mahasiswa
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Tambah instansi tujuan
-        document.querySelector('button.btn.btn-secondary[type="button"]').addEventListener('click', function () {
-            const container = document.getElementById('instansi-container');
-            const group = document.createElement('div');
-            group.classList.add('input-group', 'mb-2');
-            group.innerHTML = `
-                <input type="text" name="instansi_tujuan[]" class="form-control" placeholder="Instansi Tujuan" required>
-                <button class="btn btn-danger" type="button">Hapus</button>
-            `;
-            container.appendChild(group);
-        });
+    function tambahInstansi() {
+        const container = document.getElementById('instansiContainer');
+        const inputGroup = document.createElement('div');
+        inputGroup.className = 'input-group mb-2';
+        inputGroup.innerHTML = `
+            <input type="text" name="instansi_tujuan[]" class="form-control" required>
+            <button type="button" class="btn btn-danger" onclick="hapusInstansi(this)">Hapus</button>
+        `;
+        container.appendChild(inputGroup);
+    }
 
-        // Hapus instansi tujuan
-        document.addEventListener('click', function (e) {
-            if (e.target.matches('#instansi-container .btn-danger')) {
-                const group = e.target.closest('.input-group');
-                if (group) {
-                    group.remove();
-                }
-            }
-        });
-    });
+    function hapusInstansi(button) {
+        const group = button.parentNode;
+        group.remove();
+    }
+</script>
 
-
+<script>
     // Konfirmasi sebelum submit
     function konfirmasiKirim() {
         const form = document.getElementById('formPengajuan');
         let valid = true;
         let message = '';
 
-        // ambil semua input yang diperlukan
-        const nama = form.querySelector('[name="nama"]');
-    const tempatLahir = form.querySelector('[name="tempat_lahir"]');
-    const tanggalLahir = form.querySelector('[name="tanggal_lahir"]');
-    const pekerjaan = form.querySelector('[name="pekerjaan"]');
-    const alamat = form.querySelector('[name="alamat"]');
-    const nomorIdentitas = form.querySelector('[name="nomor_identitas"]');
-    const judulPenelitian = form.querySelector('[name="judul_penelitian"]');
-    const instansiTujuan = form.querySelector('[name="instansi_tujuan"]');
-    const suratDari = form.querySelector('[name="surat_dari"]');
-    const nomorSurat = form.querySelector('[name="nomor_surat"]');
-    const halSurat = form.querySelector('[name="hal_surat"]');
-    const tanggalSurat = form.querySelector('[name="tanggal_surat"]');
-    const tanggalMulai = form.querySelector('[name="tanggal_mulai"]');
-    const tanggalSelesai = form.querySelector('[name="tanggal_selesai"]');
-    const fileKTP = form.querySelector('#file_ktp');
-    const fileSurat = form.querySelector('#file_surat_dari');
+        // Ambil semua input yang diperlukan
+        const nama = document.querySelector('input[name="nama"]');
+        const tempatLahir = document.querySelector('input[name="tempat_lahir"]');
+        const tanggalLahir = document.querySelector('input[name="tanggal_lahir"]');
+        const pekerjaan = document.querySelector('input[name="pekerjaan"]');
+        const alamat = document.querySelector('input[name="alamat"]');
+        const nomorIdentitas = document.querySelector('input[name="nomor_identitas"]');
+        const judulPenelitian = document.querySelector('input[name="judul_penelitian"]');
+        const instansiTujuan = document.querySelector('input[name="instansi_tujuan[]"]');
+        const suratDari = document.querySelector('input[name="surat_dari"]');
+        const nomorSurat = document.querySelector('input[name="nomor_surat"]');
+        const halSurat = document.querySelector('input[name="hal_surat"]');
+        const tanggalSurat = document.querySelector('input[name="tanggal_surat"]');
+        const tanggalMulai = document.querySelector('input[name="tanggal_mulai"]');
+        const tanggalSelesai = document.querySelector('input[name="tanggal_selesai"]');
+        const fileKTP = document.getElementById('file_ktp');
+        const fileSurat = document.getElementById('file_surat_dari');
 
         // Validasi kolom wajib
         if (!nama.value.trim()) {
@@ -174,12 +172,12 @@
         } else if (!nomorIdentitas.value.trim()) {
             valid = false;
             message = 'Nomor Identitas (KTP) wajib diisi.';
-        }else if (!/^\d+$/.test(nomorIdentitas.value.trim())) {
-            valid = false;
-            message = 'Nomor Identitas (KTP) hanya boleh terdiri dari angka.';
         } else if (nomorIdentitas.value.trim().length !== 16) {
             valid = false;
-            message = 'Nomor Identitas (KTP) harus  16 digit.';
+            message = 'Nomor Identitas (KTP) harus terdiri dari 16 digit angka.';
+        } else if (!/^\d+$/.test(nomorIdentitas.value.trim())) {
+            valid = false;
+            message = 'Nomor Identitas (KTP) hanya boleh terdiri dari angka.';
         } else if (!judulPenelitian.value.trim()) {
             valid = false;
             message = 'Judul Penelitian wajib diisi.';
@@ -218,6 +216,7 @@
             valid = false;
             message = 'File Surat Pengantar wajib diunggah.';
         }
+
         // Jika tidak valid, tampilkan pesan
         if (!valid) {
             Swal.fire({
@@ -244,9 +243,9 @@
         });
     }
     // Update nama file yang dipilih
-        function updateLabel(input) {
-            const labelId = input.id + '_name';
-            const fileName = input.files.length > 0 ? input.files[0].name : 'Belum ada file';
-            document.getElementById(labelId).innerText = fileName;
-        }
+    function updateLabel(input) {
+        const labelId = input.id + '_name';
+        const fileName = input.files.length > 0 ? input.files[0].name : 'Belum ada file';
+        document.getElementById(labelId).innerText = fileName;
+    }
 </script>

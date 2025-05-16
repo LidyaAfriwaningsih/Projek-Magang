@@ -10,9 +10,9 @@
             $('#editModal input#phone').val($(this).data('phone'));
             $('#editModal input#email').val($(this).data('email'));
             if ($(this).data('active') == 1) {
-                $('#editModal input#is_active').attr('checked', 1)
+                $('#editModal input#is_active').prop('checked', true);
             } else {
-                $('#editModal input#is_active').removeAttribute('checked');
+                $('#editModal input#is_active').prop('checked', false);
             }
         });
     </script>
@@ -132,7 +132,8 @@
                     <x-input-form name="password" :label="__('model.user.password')" type="password" />
                     <x-input-form name="password_confirmation" :label="__('model.user.password_confirmation')" type="password" />
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="is_active" value="true" id="is_active">
+                        <input type="hidden" name="is_active" value="0">
+                        <input class="form-check-input" type="checkbox" name="is_active" value="1" id="is_active">
                         <label class="form-check-label" for="is_active"> {{ __('model.user.is_active') }} </label>
                     </div>
                 </div>

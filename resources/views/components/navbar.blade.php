@@ -18,7 +18,8 @@
                    data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         <img src="{{ auth()->user()->profile_picture }}" alt
-                             class="w-px-40 h-auto rounded-circle"/>
+                            class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;" />
+
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
@@ -28,7 +29,8 @@
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar avatar-online">
                                         <img src="{{ auth()->user()->profile_picture }}" alt
-                                             class="w-px-40 h-auto rounded-circle"/>
+                                            class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;" />
+
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">

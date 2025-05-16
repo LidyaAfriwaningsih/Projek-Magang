@@ -31,6 +31,11 @@ class LetterStatusSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'status' => 'Penting',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }
