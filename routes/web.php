@@ -51,9 +51,9 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/magang/{kelompok_id}/tolak', [PengajuanController::class, 'tolakMagang'])->name('magang.tolak');
             Route::post('/magang/{kelompok_id}/selesai', [PengajuanController::class, 'selesaiMagang'])->name('magang.selesai');
             Route::get('/magang/cetak/{kelompok_id}', [PengajuanController::class, 'cetakMagang'])->name('pengajuan.magang.cetak');
-            Route::delete('magang/{kelompok_id}/hapus', [PengajuanController::class, 'hapusMagang'])->name('pengajuan.magang.hapus');
-            Route::get('magang/{id}/edit', [PengajuanController::class, 'editMagang'])->name('pengajuan.magang.edit');
-            Route::put('magang/{id}', [PengajuanController::class, 'updateMagang'])->name('pengajuan.magang.update');
+            Route::delete('/magang/{kelompok_id}/hapus', [PengajuanController::class, 'hapusMagang'])->name('pengajuan.magang.hapus');
+            Route::get('/magang/{id}/edit', [PengajuanController::class, 'editMagang'])->name('pengajuan.magang.edit');
+            Route::put('/magang/{id}', [PengajuanController::class, 'updateMagang'])->name('pengajuan.magang.update');
             
            
             // Penelitian
@@ -63,9 +63,9 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/penelitian/{kelompok_id}/tolak', [PengajuanController::class, 'tolakPenelitian'])->name('penelitian.tolak');
             Route::post('/penelitian/{id}/selesai', [PengajuanController::class, 'selesaiPenelitian'])->name('penelitian.selesai');
             Route::get('/penelitian/cetak/{id}', [PengajuanController::class, 'cetakPenelitian'])->name('pengajuan.penelitian.cetak');
-            Route::delete('penelitian/{id}/hapus', [PengajuanController::class, 'hapusPenelitian'])->name('pengajuan.penelitian.hapus');
-            Route::get('/admin/penelitian/{id}/edit', [PengajuanController::class, 'editPenelitian'])->name('pengajuan.penelitian.edit');
-            Route::put('/admin/penelitian/{id}', [PengajuanController::class, 'updatePenelitian'])->name('pengajuan.penelitian.update');
+            Route::delete('/penelitian/{id}/hapus', [PengajuanController::class, 'hapusPenelitian'])->name('pengajuan.penelitian.hapus');
+            Route::get('/penelitian/{id}/edit', [PengajuanController::class, 'editPenelitian'])->name('pengajuan.penelitian.edit');
+            Route::put('/penelitian/{id}', [PengajuanController::class, 'updatePenelitian'])->name('pengajuan.penelitian.update');
 
         });
     });
@@ -77,10 +77,20 @@ Route::middleware(['auth'])->group(function () {
         // Rute untuk pengajuan magang
         Route::get('/magang', [PengajuanController::class, 'magang'])->name('magang');
         Route::post('/magang', [PengajuanController::class, 'storeMagang'])->name('magang.store');
+        Route::delete('/magang/{kelompok_id}', [PengajuanController::class, 'destroyMagang'])->name('magang.destroy');
+        Route::get('/magang/{kelompok_id}/detail', [PengajuanController::class, 'showMagangUser'])->name('magang.detail');
+        Route::get('/magang/{kelompok_id}/edit', [PengajuanController::class, 'editMagangUser'])->name('magang.edit');
+        Route::put('/magang/{kelompok_id}/update', [PengajuanController::class, 'updateMagangUser'])->name('magang.update');
+
+
         
         // Rute untuk pengajuan penelitian
         Route::get('/penelitian', [PengajuanController::class, 'penelitian'])->name('penelitian');
         Route::post('/penelitian', [PengajuanController::class, 'storePenelitian'])->name('storePenelitian');
+        Route::delete('/penelitian/{id}', [PengajuanController::class, 'destroyPenelitian'])->name('penelitian.destroy');
+        Route::get('/penelitian/{id}/detail', [PengajuanController::class, 'showPenelitianUser'])->name('penelitian.detail');
+        Route::get('/penelitian/{id}/edit', [PengajuanController::class, 'editPenelitianUser'])->name('penelitian.edit');
+        Route::put('/penelitian/{id}/update', [PengajuanController::class, 'updatePenelitianUser'])->name('penelitian.update');
 
         
     });

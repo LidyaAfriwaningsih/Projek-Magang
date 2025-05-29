@@ -36,7 +36,10 @@
                                     @csrf
                                     <button type="submit" class="btn btn-warning btn-sm">Proses</button>
                                 </form>
-
+                                <form action="{{ route('admin.penelitian.tolak', $pengajuan->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger btn-sm">Tolak</button>
+                                </form>
                                 <form action="{{ route('admin.penelitian.selesai', $pengajuan->id) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="btn btn-success btn-sm">Selesai</button>

@@ -19,6 +19,7 @@
                             <th>Jenis</th>
                             <th>Tanggal Pengajuan</th>
                             <th>Status</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,6 +39,40 @@
                                         <span class="badge bg-secondary">Ditolak</span>
                                     @endif
                                 </td>
+                                <td>
+                                    @php
+                                        // Route untuk detail
+                                        if ($item->jenis === 'penelitian') {
+                                            $detailUrl = route('pengajuan.penelitian.detail', ['id' => $item->id]);
+                                            $editUrl = route('pengajuan.penelitian.edit', ['id' => $item->id]);
+                                            $deleteRoute = route('pengajuan.penelitian.destroy', ['id' => $item->id]);
+                                        } elseif ($item->jenis === 'magang') {
+                                            $detailUrl = route('pengajuan.magang.detail', ['kelompok_id' => $item->id]);
+                                            $editUrl = route('pengajuan.magang.edit', ['kelompok_id' => $item->id]);
+                                            $deleteRoute = route('pengajuan.magang.destroy', ['kelompok_id' => $item->id]);
+                                        } else {
+                                            $detailUrl = '#';
+                                            $editUrl = '#';
+                                            $deleteRoute = '#';
+                                        }
+                                    @endphp
+
+                                    <a href="{{ $detailUrl }}" class="btn btn-info btn-sm">
+                                        Detail Pengajuan
+                                    </a>
+
+                                    <a href="{{ $editUrl }}" class="btn btn-warning btn-sm">
+                                        Edit
+                                    </a>
+
+                                    <form action="{{ $deleteRoute }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pengajuan ini?')"
+                                        style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                    </form>
+                                </td>
+
                             </tr>
                         @endforeach
                     </tbody>
