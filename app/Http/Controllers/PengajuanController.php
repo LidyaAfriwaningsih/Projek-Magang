@@ -370,19 +370,6 @@ class PengajuanController extends Controller
         $tanggalSelesai = Carbon::parse($pengajuan->tanggal_selesai)->translatedFormat('d F Y');
         $tanggalCetak = Carbon::now()->translatedFormat('d F Y');
 
-        // Format instansi_tujuan jika disimpan sebagai JSON
-        $instansiTujuan = is_array($pengajuan->instansi_tujuan)
-            ? $pengajuan->instansi_tujuan
-            : json_decode($pengajuan->instansi_tujuan, true);
-
-        $instansiTujuan = $instansiTujuan ?? [];
-
-        // Format menjadi list numerik
-        $instansiText = '';
-        foreach ($instansiTujuan as $i => $instansi) {
-            $instansiText .= ($i + 1) . '. ' . $instansi . "\n";
-        }
-
         // Isi template dengan data dari pengajuan
         $templateProcessor->setValue('nomor_surat', $pengajuan->nomor_surat);
         $templateProcessor->setValue('surat_dari', $pengajuan->surat_dari);
@@ -526,4 +513,120 @@ class PengajuanController extends Controller
         }
     }
 
+    public function editPenelitian($id)
+    {
+        $pengajuan = Pengajuan::findOrFail($id);
+        return view('admin.Pengajuan.Penelitian.edit', compact('pengajuan'));
+    }
+
+    public function updatePenelitian(Request $request, $id)
+    {
+        $request->validate([
+            'nama.*' => 'required|string|max:255',
+            'nim.*' => 'required|string|max:16|regex:/^[0-9]+$/',
+            'nomor_identitas.*' => 'required|string|max:16|regex:/^[0-9]+$/',
+            'Pekerjaan.*' => 'required|string|max:50',
+            'alamat.*' => 'required|string|max:255',
+            'tempat_lahir.*' => 'required|string|max:50',
+            'tanggal_lahir.*' => 'required|date',
+            'instansi_tujuan.*' => 'required|string|max:255',
+            'judul_penelitian.*' => 'required|string|max:255',
+            'surat_dari.*' => 'required|string|max:255',
+            'nomor_surat.*' => 'required|string|max:100',
+            'hal_surat.*' => 'required|string|max:100',
+            'tanggal_surat.*' => 'required|date',
+            'tanggal_mulai.*' => 'required|date|before_or_equal:tanggal_selesai.*',
+            'tanggal_selesai.*' => 'required|date|after_or_equal:tanggal_mulai.*',
+            'file_ktp.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'file_surat_dari.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ]);
+
+        try {
+            $pengajuan = Pengajuan::findOrFail($id);
+
+            // Update field sederhana langsung
+            $pengajuan->update($request->except(['file_ktp', 'file_surat_dari']));
+
+            // Upload file KTP jika ada
+            if ($request->hasFile('file_ktp')) {
+                $pathKTP = $request->file('file_ktp')->store('ktp_files');
+                $pengajuan->file_ktp = $pathKTP;
+            }
+
+            // Upload surat dari instansi jika ada
+            if ($request->hasFile('file_surat_dari')) {
+                $pathSurat = $request->file('file_surat_dari')->store('surat_dari_files');
+                $pengajuan->file_surat_dari = $pathSurat;
+            }
+
+            $pengajuan->save();
+
+            return redirect()->route('admin.penelitian.index')
+                ->with('success', 'Pengajuan penelitian berhasil diperbarui');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal memperbarui pengajuan: ' . $e->getMessage());
+        }
+        
+    }
+
+    public function editMagang($id)
+    {
+        $pengajuan = Pengajuan::findOrFail($id);
+        return view('admin.Pengajuan.Magang.edit', compact('pengajuan'));
+    }
+
+    public function updateMagang(Request $request, $id)
+    {
+        $request->validate([
+            'nama.*' => 'required|string|max:255',
+            'nim.*' => 'required|string|max:16|regex:/^[0-9]+$/',
+            'nomor_identitas.*' => 'required|string|max:16|regex:/^[0-9]+$/',
+            'Pekerjaan.*' => 'required|string|max:50',
+            'alamat.*' => 'required|string|max:255',
+            'tempat_lahir.*' => 'required|string|max:50',
+            'tanggal_lahir.*' => 'required|date',
+            'instansi_tujuan.*' => 'required|string|max:255',
+            'judul_penelitian.*' => 'required|string|max:255',
+            'surat_dari.*' => 'required|string|max:255',
+            'nomor_surat.*' => 'required|string|max:100',
+            'hal_surat.*' => 'required|string|max:100',
+            'tanggal_surat.*' => 'required|date',
+            'tanggal_mulai.*' => 'required|date|before_or_equal:tanggal_selesai.*',
+            'tanggal_selesai.*' => 'required|date|after_or_equal:tanggal_mulai.*',
+            'file_ktp.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'file_surat_dari.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ]);
+
+        try {
+            $pengajuan = Pengajuan::findOrFail($id);
+
+            // Update field sederhana langsung
+            $pengajuan->update($request->except(['file_ktp', 'file_surat_dari']));
+
+            // Upload file KTP jika ada
+            if ($request->hasFile('file_ktp')) {
+                $pathKTP = $request->file('file_ktp')->store('ktp_files');
+                $pengajuan->file_ktp = $pathKTP;
+            }
+
+            // Upload surat dari instansi jika ada
+            if ($request->hasFile('file_surat_dari')) {
+                $pathSurat = $request->file('file_surat_dari')->store('surat_dari_files');
+                $pengajuan->file_surat_dari = $pathSurat;
+            }
+
+            $pengajuan->save();
+
+            return redirect()->route('admin.magang.index')
+                ->with('success', 'Pengajuan penelitian berhasil diperbarui');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal memperbarui pengajuan: ' . $e->getMessage());
+        }
+        
+    }
+
+
 }
+

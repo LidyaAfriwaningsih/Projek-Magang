@@ -52,6 +52,8 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/magang/{kelompok_id}/selesai', [PengajuanController::class, 'selesaiMagang'])->name('magang.selesai');
             Route::get('/magang/cetak/{kelompok_id}', [PengajuanController::class, 'cetakMagang'])->name('pengajuan.magang.cetak');
             Route::delete('magang/{kelompok_id}/hapus', [PengajuanController::class, 'hapusMagang'])->name('pengajuan.magang.hapus');
+            Route::get('magang/{id}/edit', [PengajuanController::class, 'editMagang'])->name('pengajuan.magang.edit');
+            Route::put('magang/{id}', [PengajuanController::class, 'updateMagang'])->name('pengajuan.magang.update');
             
            
             // Penelitian
@@ -62,6 +64,9 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/penelitian/{id}/selesai', [PengajuanController::class, 'selesaiPenelitian'])->name('penelitian.selesai');
             Route::get('/penelitian/cetak/{id}', [PengajuanController::class, 'cetakPenelitian'])->name('pengajuan.penelitian.cetak');
             Route::delete('penelitian/{id}/hapus', [PengajuanController::class, 'hapusPenelitian'])->name('pengajuan.penelitian.hapus');
+            Route::get('/admin/penelitian/{id}/edit', [PengajuanController::class, 'editPenelitian'])->name('pengajuan.penelitian.edit');
+            Route::put('/admin/penelitian/{id}', [PengajuanController::class, 'updatePenelitian'])->name('pengajuan.penelitian.update');
+
         });
     });
 

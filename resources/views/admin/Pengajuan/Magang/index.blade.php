@@ -19,6 +19,7 @@
                         <th>Instansi Tujuan</th>
                         <th>Status</th>
                         <th>Aksi</th>
+                        <th>Lanjutan</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,6 +53,9 @@
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                     </form>
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.pengajuan.magang.edit', $pengajuan->id) }}">Edit</a>
                                 </td>
                             </tr>
                         @endforeach
