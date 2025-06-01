@@ -58,7 +58,7 @@
                                     @endphp
 
                                     <a href="{{ $detailUrl }}" class="btn btn-info btn-sm">
-                                        Detail Pengajuan
+                                        Detail
                                     </a>
 
                                     <a href="{{ $editUrl }}" class="btn btn-warning btn-sm">

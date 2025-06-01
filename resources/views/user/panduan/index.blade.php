@@ -6,10 +6,10 @@
         <p>Silakan baca panduan berikut untuk memahami proses pengajuan surat</p>
         <h5>Aturan:</h5>
        <ol>
-        <li>Surat ditujukan pada Kesbangpol Bukittinggi</li>
-        <li>KTP yang diupload 1 saja (jika berkelompok)</li>
-        <li>Pastikan meminta stempel persetujuan magang terlebih dahulu pada instansi tempat tujuan (Surat Rekomendasi Magang)</li>
-        <li>Surat dapat dijemput kurang lebih 2 hari</li>
+        <li>Surat ditujukan pada Kesbangpol Bukittinggi.</li>
+        <li>KTP yang diupload 1 saja (jika berkelompok).</li>
+        <li>Bagi yang ingin melakukan pengajuan magang, pastikan meminta stempel persetujuan magang terlebih dahulu pada instansi tempat tujuan (Surat Rekomendasi Magang).</li>
+        <li>Surat dapat dijemput kurang lebih 2 hari.</li>
         </ol>
 
 

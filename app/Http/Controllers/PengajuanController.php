@@ -404,6 +404,12 @@ class PengajuanController extends Controller
         // Temukan pengajuan magang berdasarkan ID
         $pengajuan = Pengajuan::findOrFail($id);
 
+        // Cek status pengajuan
+        if (!in_array($pengajuan->status, ['selesai', 'ditolak'])) {
+            return redirect()->back()
+                ->with('error', 'Hanya pengajuan yang berstatus "selesai" atau "ditolak" yang dapat dihapus.');
+        }
+
         // Hapus pengajuan magang
         $pengajuan->delete();
 
@@ -627,31 +633,7 @@ class PengajuanController extends Controller
         }
         
     }
-
-    public function destroyMagang($id)
-    {
-        $pengajuan = Pengajuan::where('id', $id)
-            ->where('jenis', 'magang') // Pastikan ini memang pengajuan magang
-            ->where('user_id', Auth::id()) // Hanya user pemilik yang bisa hapus
-            ->firstOrFail();
-
-        $pengajuan->delete();
-
-        return redirect()->route('user.pengajuan.index')->with('success', 'Pengajuan magang berhasil dihapus.');
-    }
-
-    public function destroyPenelitian($id)
-    {
-        $pengajuan = Pengajuan::where('id', $id)
-            ->where('jenis', 'penelitian') // Pastikan ini pengajuan penelitian
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-
-        $pengajuan->delete();
-
-        return redirect()->route('user.pengajuan.index')->with('success', 'Pengajuan penelitian berhasil dihapus.');
-    }
-
+   
     public function showMagangUser($id)
     {
         $pengajuan = Pengajuan::where('id', $id)

@@ -101,11 +101,11 @@ Route::middleware(['auth'])->group(function () {
 
         // Panduan - Hanya untuk pengguna biasa, bukan admin
         Route::get('/panduan', function () {
-            return view('admin.panduan.index');
+            return view('user.panduan.index');
         })->middleware('role:user')->name('panduan.index');
 
         // Tentang - Hanya untuk pengguna biasa, bukan admin
-        Route::view('/admin/tentang', 'admin.tentang.index')->middleware('role:user')->name('admin.tentang.index');
+        Route::view('/user/tentang', 'user.tentang.index')->middleware('role:user')->name('admin.tentang.index');
     });
 
 
